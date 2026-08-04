@@ -1,0 +1,22 @@
+{
+  "version": "11.7.0-lts-turbo-update-safe",
+  "files": 480,
+  "python_files": 259,
+  "sqlalchemy_tables": 157,
+  "requirements": 97,
+  "latest_application_migration": "11.7.0-lts-turbo-update-safe",
+  "alembic_head": "1170_lts_turbo_update_safe",
+  "max_files_in_one_directory": 99,
+  "max_directory": ".",
+  "blueprints": {
+    "render.yaml": [
+      "campuspass-v11-7-staging"
+    ],
+    "render.production.yaml": [
+      "campuspass-v11-7-web",
+      "campuspass-v11-7-worker"
+    ]
+  },
+  "domain_tests_passed": 14,
+  "runtime_full_test_status": "not_run_missing_aiogram_redis_aiosqlite_in_builder"
+}
