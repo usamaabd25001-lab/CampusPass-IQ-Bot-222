@@ -1,14 +1,13 @@
-الإصلاح الجراحي لمشكلة ProviderPaymentMethodStates.proof_guide
+CampusPass IQ V11.7.2B — Database Schema Repair
 
-المسار الذي يجب استبداله داخل مستودع GitHub:
-app/bot/states.py
+1) فك الضغط.
+2) انسخ مجلد app إلى جذر مستودع GitHub ووافق على استبدال app/db/migrations.py.
+3) Commit ثم Push.
+4) أصلح REDIS_URL ليشير إلى Render Key Value في نفس Region للخدمتين.
+5) نفّذ Clear build cache & deploy.
 
-الخطوات:
-1) افتح GitHub Desktop > Repository > Show in Explorer.
-2) ادخل إلى app ثم bot.
-3) استبدل states.py بهذا الملف.
-4) ارجع إلى GitHub Desktop؛ يجب أن يظهر ملف واحد Changed.
-5) Commit ثم Push origin.
-6) في Render اختر Clear build cache & deploy.
+حل فوري اختياري قبل النشر:
+افتح Supabase SQL Editor وشغّل الملف:
+docs/releases/v11_7_2/SUPABASE_IMMEDIATE_FIX.sql
 
-هذا الملف مأخوذ من V11.7.1 الأخيرة، ولم يحذف أي State أو ميزة. تمت إضافة proof_guide فقط مع توثيق وقائي.
+الإصلاح إضافي فقط، ولا يحذف بيانات أو مزايا.
