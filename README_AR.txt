@@ -1,12 +1,14 @@
-CampusPass IQ V11.7.2 Render Hotfix
+الإصلاح الجراحي لمشكلة ProviderPaymentMethodStates.proof_guide
 
-المشكلة:
-ProviderPaymentMethodStates.proof_guide كان مستخدماً في provider_catalog.py وmiddleware.py، لكنه غير معرّف داخل app/bot/states.py.
+المسار الذي يجب استبداله داخل مستودع GitHub:
+app/bot/states.py
 
-الإصلاح:
-إضافة السطر التالي إلى ProviderPaymentMethodStates:
-    proof_guide = State()
+الخطوات:
+1) افتح GitHub Desktop > Repository > Show in Explorer.
+2) ادخل إلى app ثم bot.
+3) استبدل states.py بهذا الملف.
+4) ارجع إلى GitHub Desktop؛ يجب أن يظهر ملف واحد Changed.
+5) Commit ثم Push origin.
+6) في Render اختر Clear build cache & deploy.
 
-طريقة التطبيق:
-انسخ مجلد app من هذه الحزمة فوق مجلد app داخل مستودع GitHub، ثم Commit وPush.
-لا يحذف أو يغير أي ميزة أخرى.
+هذا الملف مأخوذ من V11.7.1 الأخيرة، ولم يحذف أي State أو ميزة. تمت إضافة proof_guide فقط مع توثيق وقائي.
