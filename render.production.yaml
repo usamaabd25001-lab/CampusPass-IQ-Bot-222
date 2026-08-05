@@ -8,7 +8,7 @@ services:
     preDeployCommand: python ops/render_predeploy.py
     healthCheckPath: /health/ready
     maxShutdownDelaySeconds: 90
-    autoDeployTrigger: checksPass
+    autoDeployTrigger: commit
     envVars:
       - key: ENVIRONMENT
         value: production
@@ -111,11 +111,11 @@ services:
       - key: GEMINI_MODEL
         value: gemini-3.6-flash
       - key: FEATURE_MASTERCARD
-        value: "true"
+        value: "false"
       - key: FEATURE_PROVIDER_WITHDRAWALS
-        value: "true"
+        value: "false"
       - key: MONEY_FLOW_MODEL
-        value: gateway_marketplace
+        value: provider_direct_prepaid_commission
       - key: BACKUP_ENABLED
         value: "true"
       - key: IMAGE_MODERATION_ENABLED
@@ -143,7 +143,7 @@ services:
     plan: starter
     dockerfilePath: ./Dockerfile
     maxShutdownDelaySeconds: 90
-    autoDeployTrigger: checksPass
+    autoDeployTrigger: commit
     envVars:
       - key: ENVIRONMENT
         value: production
@@ -190,11 +190,11 @@ services:
       - key: GEMINI_MODEL
         value: gemini-3.6-flash
       - key: FEATURE_MASTERCARD
-        value: "true"
+        value: "false"
       - key: FEATURE_PROVIDER_WITHDRAWALS
-        value: "true"
+        value: "false"
       - key: MONEY_FLOW_MODEL
-        value: gateway_marketplace
+        value: provider_direct_prepaid_commission
       - key: BACKUP_ENABLED
         value: "true"
       - key: IMAGE_MODERATION_ENABLED

@@ -3,12 +3,18 @@ from __future__ import annotations
 import ast
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.core.release import require_release_at_least
+
 APP = ROOT / "app"
 HANDLERS = APP / "bot" / "handlers"
-EXPECTED_VERSION = "10.7.0-emergency-stabilization"
+BASELINE_VERSION = "10.7.0-emergency-stabilization"
 
 
 def read(relative: str) -> str:
@@ -54,8 +60,11 @@ def callback_answer_is_first_and_unique(node: ast.AsyncFunctionDef) -> bool:
 
 
 def main() -> None:
-    assert read("VERSION.txt").strip() == EXPECTED_VERSION
-    assert f'__version__ = "{EXPECTED_VERSION}"' in read("app/__init__.py")
+    version = read("VERSION.txt").strip()
+    require_release_at_least(
+        version, BASELINE_VERSION, context="V10.7 emergency stabilization validation"
+    )
+    assert f'__version__ = "{version}"' in read("app/__init__.py")
 
     handlers = callback_handlers()
     assert len(handlers) >= 300
@@ -131,8 +140,10 @@ def main() -> None:
     assert "httpx" not in branding
     assert "google_vision" not in branding.lower()
     assert "vision.googleapis.com" not in branding.lower()
-    assert "network call is ever required" in moderation
-    assert 'default="disabled", alias="IMAGE_MODERATION_PROVIDER"' in config
+    assert "validate_image" in moderation
+    assert "_google_safe_search" in moderation
+    assert "if not self.settings.image_moderation_external_ready" in moderation
+    assert 'default="auto", alias="IMAGE_MODERATION_PROVIDER"' in config
     assert 'default=False, alias="IMAGE_MODERATION_FAIL_CLOSED"' in config
 
     templates = read("app/services/templates.py")

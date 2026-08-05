@@ -106,7 +106,7 @@ async def billing_home(
 async def billing_issue_now(
     callback: CallbackQuery, session: AsyncSession, settings: Settings, services: Services
 ) -> None:
-    await callback.answer("جاري الإصدار...")
+    await callback.answer()
     if not callback.message or not await require_admin(callback, settings):
         return
     invoices = await services.owner_commerce.issue_due_invoices(session, now=datetime.now(UTC))
@@ -169,7 +169,6 @@ async def billing_cycle(
         ad_hourly_rate_iqd=current.ad_hourly_rate_iqd if current else 1000,
         auto_suspend=current.auto_suspend if current else True,
     )
-    await callback.answer("تم تحديث الدورة ✅", show_alert=True)
     provider = await session.get(Provider, provider_id)
     updated = await session.scalar(select(ProviderBillingPolicy).where(ProviderBillingPolicy.provider_id == provider_id))
     await edit_or_send(

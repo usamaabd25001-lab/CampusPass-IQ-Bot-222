@@ -1,9 +1,15 @@
 from __future__ import annotations
 
 import ast
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.core.release import require_release_at_least
+
 APP = ROOT / "app"
 HANDLERS = APP / "bot" / "handlers"
 
@@ -51,7 +57,10 @@ def callback_handlers() -> list[tuple[Path, ast.AsyncFunctionDef]]:
 
 def main() -> None:
     version = (ROOT / "VERSION.txt").read_text(encoding="utf-8").strip()
-    assert version in {"10.5.0-final-hardening", "10.6.0-platform-access-referral", "10.7.0-emergency-stabilization"}
+    require_release_at_least(
+        version, "10.5.0-final-hardening", context="V10.5 final hardening validation"
+    )
+    assert f'__version__ = "{version}"' in (APP / "__init__.py").read_text(encoding="utf-8")
 
     handlers = callback_handlers()
     assert len(handlers) >= 300

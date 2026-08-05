@@ -2,12 +2,18 @@ from __future__ import annotations
 
 import ast
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.core.release import require_release_at_least
+
 APP = ROOT / "app"
 HANDLERS = APP / "bot" / "handlers"
-EXPECTED_VERSION = "10.7.0-emergency-stabilization"
+BASELINE_VERSION = "10.6.0-platform-access-referral"
 
 
 def read(path: str) -> str:
@@ -76,8 +82,11 @@ def _callback_answer_count(node: ast.AsyncFunctionDef) -> int:
 
 
 def main() -> None:
-    assert read("VERSION.txt").strip() == EXPECTED_VERSION
-    assert f'__version__ = "{EXPECTED_VERSION}"' in read("app/__init__.py")
+    version = read("VERSION.txt").strip()
+    require_release_at_least(
+        version, BASELINE_VERSION, context="V10.6 platform/referral validation"
+    )
+    assert f'__version__ = "{version}"' in read("app/__init__.py")
 
     handlers = _callback_handlers()
     assert len(handlers) >= 300
@@ -137,23 +146,23 @@ def main() -> None:
     config = read("app/core/config.py")
     points_view = menu_handler
     assert "referral:success:" in finance
-    assert "referral:coupon:" in finance
-    assert "OrderCouponType.FEE_WAIVER.value" in finance
-    assert "referral_invites_per_coupon" in finance
+    assert "referral:coupon:" not in finance
+    assert "OrderCouponType.FEE_WAIVER.value" not in finance
+    assert "referral_reward_points" in finance
     assert "self.wallets.post" not in finance
     assert "WalletEntryType.REFERRAL" not in finance
+    assert 'default=10, alias="REFERRAL_REWARD_POINTS"' in config
     assert 'default=0, alias="REFERRAL_WALLET_REWARD_IQD"' in config
-    assert 'default=3, alias="REFERRAL_INVITES_PER_COUPON"' in config
-    assert "دعوات ناجحة تمنحك كودًا سريًا" in points_view
-    assert "لا يُضاف رصيد مالي للمحفظة" in points_view
+    assert "نظام الحالة والمكافآت" in points_view
+    assert "من دون بطاقات إعفاء متراكمة" in points_view
 
     branding = read("app/services/branding.py")
     provider_catalog = read("app/bot/handlers/provider_catalog.py")
     admin_catalog = read("app/bot/handlers/admin/catalog.py")
     assert "provider.logo_file_id = candidate.file_id" in branding
-    assert "ImageModerationService" not in branding
+    assert "ImageModerationService" in branding
     assert "httpx" not in branding
-    assert "ensure_safe" not in branding
+    assert "await self.moderation.ensure_safe(raw)" in branding
     assert "message.photo[-1]" in provider_catalog
     assert "message.photo[-1]" in admin_catalog
     assert "save_url(" not in provider_catalog

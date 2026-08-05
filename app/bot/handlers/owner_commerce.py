@@ -457,10 +457,10 @@ async def reward_task_detail(callback:CallbackQuery,session:AsyncSession,service
 
 @router.callback_query(F.data.startswith("reward:verify:"))
 async def reward_verify(callback:CallbackQuery,session:AsyncSession,services:Services)->None:
-    await callback.answer("جاري التحقق...")
+    await callback.answer()
     if not callback.message or not callback.from_user:return
     if not await services.features.enabled(session,"reward_tasks",default=False):
-        await callback.answer("نظام المهام غير متاح حالياً.",show_alert=True)
+        await edit_or_send(callback.message,"نظام المهام غير متاح حالياً.")
         return
     campaign=await session.get(RewardTaskCampaign,int((callback.data or "").rsplit(":",1)[1]))
     if not campaign or campaign.status != RewardTaskStatus.ACTIVE.value:return
@@ -469,10 +469,10 @@ async def reward_verify(callback:CallbackQuery,session:AsyncSession,services:Ser
         member_status = getattr(member.status, "value", str(member.status))
         verified=member_status in {"member","administrator","creator"}
     except Exception:
-        await callback.answer("تعذر التحقق. تأكد أن البوت مشرف في القناة.",show_alert=True);return
+        await edit_or_send(callback.message,"تعذر التحقق. تأكد أن البوت مشرف في القناة.");return
     user=await services.users.get_or_create(session,callback.from_user.id,callback.from_user.username,callback.from_user.full_name or "Telegram User")
     try:completion=await services.owner_commerce.reward_verified_student(session,campaign_id=campaign.id,user_id=user.id,verified=verified)
-    except ValueError as exc:await callback.answer(str(exc),show_alert=True);return
+    except ValueError as exc:await edit_or_send(callback.message,safe(str(exc)));return
     await edit_or_send(callback.message,f"✅ تم التحقق وإضافة <b>{_money(campaign.reward_iqd)}</b> إلى محفظتك.\nرقم العملية: <code>{completion.id}</code>")
 
 

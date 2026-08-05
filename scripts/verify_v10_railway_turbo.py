@@ -15,9 +15,10 @@ from sqlalchemy.pool import NullPool
 from app import __version__
 from app.bot.handlers import build_router
 from app.core.config import Settings
+from app.core.release import require_release_at_least
 from app.core.database import Database
 
-EXPECTED_VERSION = "10.7.0-emergency-stabilization"
+BASELINE_VERSION = "10.7.0-emergency-stabilization"
 
 
 def require_text(path: str, *needles: str) -> None:
@@ -66,8 +67,10 @@ async def verify_databases() -> None:
 
 
 def main() -> None:
-    assert __version__ == EXPECTED_VERSION
-    assert (ROOT / "VERSION.txt").read_text(encoding="utf-8").strip() == EXPECTED_VERSION
+    require_release_at_least(
+        __version__, BASELINE_VERSION, context="V10 Railway Turbo verification"
+    )
+    assert (ROOT / "VERSION.txt").read_text(encoding="utf-8").strip() == __version__
 
     railway = json.loads((ROOT / "railway.json").read_text(encoding="utf-8"))
     deploy = railway["deploy"]
@@ -98,15 +101,16 @@ def main() -> None:
     )
     require_text(
         "app/services/branding.py",
-        "Validate Telegram-hosted logos locally",
+        "Local, deterministic provider branding pipeline",
         "provider.logo_file_id = candidate.file_id",
         "BrandingCandidate",
         "روابط الصور غير مقبولة",
     )
     require_text(
         "app/services/image_moderation.py",
-        "local image validation only",
         "validate_image",
+        "_google_safe_search",
+        "ensure_safe",
     )
     require_text(
         "app/services/order_coupons.py",
@@ -117,10 +121,9 @@ def main() -> None:
     require_text(
         "app/services/finance.py",
         "referral:success:",
-        "referral:coupon:",
-        "OrderCouponType.FEE_WAIVER.value",
         "completed_count == 1",
-        "referral_invites_per_coupon",
+        "referral_reward_points",
+        "no automatic fee-waiver coupon is created",
     )
     require_text(
         "app/bot/handlers/payments.py",
@@ -202,7 +205,11 @@ def main() -> None:
         "Ignored stale provider wizard callback",
     )
     require_text("app/services/reviews.py", "provider_summaries")
-    require_text("app/services/disputes.py", "open_direct_support")
+    require_text(
+        "app/services/direct_support.py",
+        "without the legacy dispute workflow",
+        "async def open",
+    )
     require_text("ops/google_drive_backup.py", "Google Drive token alert")
 
     settings = settings_for()
@@ -219,7 +226,6 @@ def main() -> None:
     assert settings.image_moderation_provider == "auto"
     assert settings.referral_reward_points == 10
     assert settings.referral_wallet_reward_iqd == 0
-    assert settings.referral_invites_per_coupon == 3
     assert settings.payment_proof_max_bytes == 15_000_000
 
     asyncio.run(verify_databases())
