@@ -98,7 +98,7 @@ class Settings(BaseSettings):
         ),
         alias="PROVIDER_TERMS_TEXT",
     )
-            privacy_text: str = Field(
+    privacy_text: str = Field(
         default=(
             "نلتزم التزاماً كاملاً بحماية خصوصيتك. تُجمع بياناتك الأساسية وتُعالج   "
             "وحصراً لغرض إدارة اشتراكاتك وتقديم الدعم الفني لك. جميع معلوماتك محفوظة "
