@@ -1,0 +1,1568 @@
+{
+  "version": "11.7.1-all-features-ready",
+  "date": "2026-08-05",
+  "requirements": [
+    {
+      "id": "GOV-001",
+      "category": "الحوكمة",
+      "title": "استخدام CampusPass IQ V10.7 كأساس معماري لبوت جديد مستقل",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "GOV-002",
+      "category": "الحوكمة",
+      "title": "أحدث قرار موثق يلغي أي قرار أقدم متعارض",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "GOV-003",
+      "category": "الحوكمة",
+      "title": "لا تنفيذ لأي ميزة بلا Requirement ID واختبار قبول",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "ACL-001",
+      "category": "الصلاحيات",
+      "title": "Student / Provider Owner / Provider Staff / Super Admin Assistant / Super Admin",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "ACL-002",
+      "category": "الصلاحيات",
+      "title": "عزل كامل لكل منصة بواسطة provider_id والتحقق داخل Service",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "ACL-003",
+      "category": "الصلاحيات",
+      "title": "منع الانتحال بالاعتماد على Telegram ID والدور لا الاسم أو Username",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "NAV-001",
+      "category": "التنقل",
+      "title": "زر رجوع ثابت يعيد خطوة واحدة دون إلغاء الطلب",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "NAV-002",
+      "category": "التنقل",
+      "title": "زر الرئيسية ثابت يمسح FSM ويعيد للقائمة الرئيسية",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "NAV-003",
+      "category": "التنقل",
+      "title": "Callback acknowledgment فوري ورسالة انتظار للعمليات الثقيلة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "NAV-004",
+      "category": "الواجهة",
+      "title": "تعديل رسالة /start من لوحة المالك مع معاينة واستعادة",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "STU-001",
+      "category": "الطالب",
+      "title": "القائمة الرئيسية: الاشتراكات، العروض، خدمة غير موجودة، حسابي، المساعدة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "STU-002",
+      "category": "الطالب",
+      "title": "الحساب: معلوماتي، محفظتي، طلباتي، اشتراكاتي، مفضلاتي، نظام الحالة والمكافآت، كوداتي",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "STU-003",
+      "category": "الطالب",
+      "title": "Web App للملف الشخصي والبيانات الجامعية",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "MKT-001",
+      "category": "المتجر",
+      "title": "منصة ثم قسم ثم خدمة ثم باقة مع تقييم وعدد مشتركين وحالة دوام",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "MKT-002",
+      "category": "المتجر",
+      "title": "زر عرض ديناميكي: اسم الخدمة + المدة + السعر",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "MKT-003",
+      "category": "المفضلة",
+      "title": "حفظ منصة أو قسم أو عرض داخل مفضلاتي",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PAY-001",
+      "category": "الدفع",
+      "title": "فاتورة رسمية تشمل السعر والخصم ورسوم البوت وخصم المحفظة والإجمالي",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PAY-002",
+      "category": "المحفظة",
+      "title": "خصم 500 د.ع تلقائياً لتغطية رسوم البوت فقط إذا الرصيد >= 500",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PAY-003",
+      "category": "المحفظة",
+      "title": "إذا كان الرصيد أقل من 500 فلا يخصم أي جزء",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PAY-004",
+      "category": "الكوبونات",
+      "title": "أكواد نسبة أو مبلغ من المالك أو المنصة مع استهداف ومدة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PAY-005",
+      "category": "الدفع",
+      "title": "طرق دفع ديناميكية حسب إعداد المنصة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PAY-006",
+      "category": "الدفع",
+      "title": "رفع إثبات ومبلغ الطالب ثم تأكيد أو رفض المزود",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PAY-007",
+      "category": "المحفظة",
+      "title": "إضافة فائض الدفع إلى Wallet Ledger مرة واحدة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PAY-008",
+      "category": "الأمن المالي",
+      "title": "Idempotency وTransactions وRow Locks ومنع التكرار",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "RWD-001",
+      "category": "المكافآت",
+      "title": "الاسم النهائي: نظام الحالة والمكافآت",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "RWD-002",
+      "category": "المكافآت",
+      "title": "حذف Waiver Passes نهائياً",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "RWD-003",
+      "category": "المكافآت",
+      "title": "مكافآت ذكية حسب الدعوات والمشتريات والنشاط ومشاركة رابط الحالة",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-001",
+      "category": "المنصة",
+      "title": "شروط وترحيب أولي للمزود",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-002",
+      "category": "المنصة",
+      "title": "متجري والعروض قائمة فرعية: إضافة، فعالة، منتهية، مخزون",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-003",
+      "category": "المنصة",
+      "title": "Smart Store FSM كامل",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-004",
+      "category": "الأسعار",
+      "title": "Smart Price Parser للأرقام العراقية",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-005",
+      "category": "المخزون",
+      "title": "حساب خاص أو مشترك بسعة محددة/غير محدودة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-006",
+      "category": "المخزون",
+      "title": "مخزون حسابات مسبق وانتقال آلي وحجز لمنع البيع المزدوج",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-007",
+      "category": "الهوية",
+      "title": "شعار المنصة واستخراج الألوان",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-008",
+      "category": "الدوام",
+      "title": "ساعات عمل وحالة متواجد/خارج الدوام",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-009",
+      "category": "البريد",
+      "title": "بريد الطلبات والإثباتات مع حالات وأرشيف",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PRV-010",
+      "category": "الإعلانات",
+      "title": "زر واحد طلب إعلان ثم اختيار النوع",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "FUL-001",
+      "category": "التفعيل",
+      "title": "تفعيل الخدمة على إيميل الطالب",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "FUL-002",
+      "category": "التفعيل",
+      "title": "مسار طلب OTP من الطالب وإرساله للموظف المكلف فقط",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "FUL-003",
+      "category": "OTP",
+      "title": "IMAP للحسابات المشتركة ومنع إعادة تسليم الكود",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "FUL-004",
+      "category": "OTP",
+      "title": "قفل 60 ثانية أو أقل ورسالة طمأنينة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "FUL-005",
+      "category": "OTP",
+      "title": "3 محاولات ثم تدخل يدوي",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "FUL-006",
+      "category": "الحساب المؤقت",
+      "title": "إثبات خروج وفترة سماح ومسار مشكلة الإنترنت",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "FUL-007",
+      "category": "الحساب المؤقت",
+      "title": "تنبيه المنصة وحظر مستقبلـي عند عدم إثبات الخروج",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "FRD-001",
+      "category": "الأصدقاء",
+      "title": "الاسم النهائي: باقة أصدقائي فقط",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FRD-002",
+      "category": "الأصدقاء",
+      "title": "الميزة مغلقة افتراضياً وتفعلها المنصة ثم تحدد العدد",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FRD-003",
+      "category": "الأصدقاء",
+      "title": "Reserve + Escrow + مهلة 24 ساعة + استرداد وفك الحجز",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FRD-004",
+      "category": "الأصدقاء",
+      "title": "رسوم البوت كاملة من كل عضو",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FRD-005",
+      "category": "الأصدقاء",
+      "title": "إظهار عدد الدافعين والمتبقين ثم إرسال الحساب للجميع معاً",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "WAR-001",
+      "category": "الضمان",
+      "title": "تحديد وجود الضمان عند إضافة العرض",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "WAR-002",
+      "category": "الضمان",
+      "title": "المطالبة من اشتراكاتي فقط",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "WAR-003",
+      "category": "الضمان",
+      "title": "تصنيف المشكلة وإرفاق صورة وإرسالها لبريد المنصة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "WAR-004",
+      "category": "الضمان",
+      "title": "OTP جديد أو حساب بديل أو رد نصي",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "WAR-005",
+      "category": "الضمان",
+      "title": "لا يغلق الضمان قبل تأكيد الطالب نجاح الحل",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "WAR-006",
+      "category": "الضمان",
+      "title": "OTP يبقى للمشترك الفعال حتى بعد اكتمال السعة أو إخفاء العرض",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED_V11_3",
+      "code_modules": [
+        "app/domain/friend_packages.py",
+        "app/services/friend_packages.py",
+        "app/services/warranties.py",
+        "app/bot/handlers/friends_warranty.py",
+        "app/services/fulfillment.py",
+        "app/tasks/scheduler.py"
+      ],
+      "database_objects": [
+        "cp_friend_package_configs",
+        "cp_friend_groups",
+        "cp_friend_group_members",
+        "cp_friend_escrow_entries",
+        "cp_warranty_policies",
+        "cp_warranty_claims",
+        "cp_warranty_claim_events",
+        "cp_warranty_replacements"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_3_friends_warranty.py"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "SLA-001",
+      "category": "SLA",
+      "title": "تنبيه بعد 30 دقيقة عمل",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "SLA-002",
+      "category": "SLA",
+      "title": "طعن بعد 12 ساعة عمل وتجميد الطلب",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "SLA-003",
+      "category": "SLA",
+      "title": "استثناء الوقت خارج ساعات العمل المعلنة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "RPT-001",
+      "category": "التقارير",
+      "title": "Free نصي يومي/أسبوعي مع هوية المنصة",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "RPT-002",
+      "category": "التقارير",
+      "title": "Plus بصيغة HTML منسقة وليس Excel/CSV",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "RPT-003",
+      "category": "التقارير",
+      "title": "Pro Web App + PDF A4",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "RPT-004",
+      "category": "التقارير",
+      "title": "هوية وشعار المنصة في Free وPlus وPro",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "RPT-005",
+      "category": "التقارير",
+      "title": "PDF: image_4 Header وimage_3 Watermark 10% وRTL وQR",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "RPT-006",
+      "category": "التقارير",
+      "title": "Celery للتوليد وCron/Materialized Views للتجميع",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-001",
+      "category": "المالك",
+      "title": "إدارة المنصات وB2B Billing والتعليق عند عدم السداد",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-002",
+      "category": "المالك",
+      "title": "Broadcast وPinned Deep Link وتمويل الإعلانات",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-003",
+      "category": "المالك",
+      "title": "استهداف إعلاني حسب بيانات الطالب والنشاط",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-004",
+      "category": "المالك",
+      "title": "UI Builder مع ثبات Action وتغيير النص/اللون/الموقع",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-005",
+      "category": "المالك",
+      "title": "إدارة المستخدمين والحظر والتصدير",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-006",
+      "category": "المالك",
+      "title": "إضافة وحذف مساعدي المالك بالـTelegram ID",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-007",
+      "category": "المالك",
+      "title": "بريد الإدارة المركزي: طعون، اقتراحات، بلاغات، أسئلة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-008",
+      "category": "المالك",
+      "title": "باقات هجينة وتوزيع الأموال بين المنصات",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-009",
+      "category": "المالك",
+      "title": "نظام مهام ومكافآت اختياري عبر Feature Flag",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OWN-010",
+      "category": "المالك",
+      "title": "صحة النظام: CPU/RAM/Ping/DB/Redis/Celery/IMAP/Errors",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "SUP-001",
+      "category": "الدعم",
+      "title": "FAQ ومساعد ذكي وتذاكر وتواصل وشروط",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "SUP-002",
+      "category": "الذكاء الاصطناعي",
+      "title": "الإجابة من قاعدة معرفة فقط وعدم الاختراع",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "DEL-001",
+      "category": "الحذف",
+      "title": "حذف Privacy Requests القديم",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "DEL-002",
+      "category": "الحذف",
+      "title": "حذف Legacy Disputes القديم",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "DEL-003",
+      "category": "الحذف",
+      "title": "حذف Abandoned Cart بالكامل",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "SEC-001",
+      "category": "الأمن",
+      "title": "Anti-Spam وFlood وCooldown وتصعيد تدريجي",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "SEC-002",
+      "category": "الأمن",
+      "title": "حماية الوصولات بالـHash والنوع والحجم ومنع إعادة الاستخدام",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "SEC-003",
+      "category": "الأمن",
+      "title": "Audit Logs لكل عملية حساسة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "SEC-004",
+      "category": "الأمن",
+      "title": "تشفير الحسابات والإيميلات والرموز وأسرار IMAP",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PERF-001",
+      "category": "الأداء",
+      "title": "استجابة بالميلي ثانية قدر الإمكان مع Redis وIndexes وPooling",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "PERF-002",
+      "category": "الأداء",
+      "title": "إظهار يرجى الانتظار للعمل الثقيل وعدم تجميد البوت",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "NOT_STARTED",
+      "code_modules": [],
+      "database_objects": [],
+      "acceptance_tests": [],
+      "notes": ""
+    },
+    {
+      "id": "OPS-001",
+      "category": "التشغيل",
+      "title": "استقبال Telegram Webhook آمن وموقّع",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/api/server.py",
+        "app/main.py"
+      ],
+      "database_objects": [
+        "cp_telegram_update_inbox"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_6_render_e2e.py::test_webhook_is_authenticated_and_durable"
+      ],
+      "notes": "التحقق من X-Telegram-Bot-Api-Secret-Token وحد أقصى للحجم."
+    },
+    {
+      "id": "OPS-002",
+      "category": "الاعتمادية",
+      "title": "صندوق دائم لتحديثات Telegram مع منع التكرار وإعادة المحاولة",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/services/telegram_updates.py"
+      ],
+      "database_objects": [
+        "cp_telegram_update_inbox"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_6_render_e2e.py::test_update_payload_digest_is_canonical"
+      ],
+      "notes": "حجز SKIP LOCKED ومحاولات محدودة وسجل SHA-256."
+    },
+    {
+      "id": "OPS-003",
+      "category": "النشر",
+      "title": "بوابة Pre-deploy على Render للمخطط والاعتماديات",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "ops/render_predeploy.py",
+        "app/services/deployment_gates.py"
+      ],
+      "database_objects": [
+        "cp_deployment_gate_runs"
+      ],
+      "acceptance_tests": [
+        "scripts/validate_v11_6_render_e2e.py"
+      ],
+      "notes": "تشغيل migrations وفحص PostgreSQL وRedis وTelegram قبل النشر."
+    },
+    {
+      "id": "OPS-004",
+      "category": "الاختبارات",
+      "title": "اختبار End-to-End بعد نشر Render",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "ops/render_smoke.py"
+      ],
+      "database_objects": [],
+      "acceptance_tests": [
+        "tests/test_v11_6_render_e2e.py::test_smoke_test_rejects_forged_webhook"
+      ],
+      "notes": "يفحص ping/live/ready/deep ويرفض webhook مزوراً."
+    },
+    {
+      "id": "OPS-005",
+      "category": "الجاهزية",
+      "title": "عدم إعلان الجاهزية من دون Worker حديث وRedis ومخطط صحيح",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/api/server.py",
+        "app/services/deployment_gates.py",
+        "app/main.py"
+      ],
+      "database_objects": [
+        "cp_worker_heartbeats",
+        "cp_deployment_gate_runs"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_6_render_e2e.py::test_render_uses_predeploy_ready_checks_and_ci_gate"
+      ],
+      "notes": "بوابة صارمة مع مهلة انتظار قبل فشل النشر."
+    },
+    {
+      "id": "OPS-006",
+      "category": "Render",
+      "title": "Blueprint للإنتاج والتجربة مع checksPass وhealth readiness",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "render.yaml",
+        "render.production.yaml"
+      ],
+      "database_objects": [],
+      "acceptance_tests": [
+        "tests/test_v11_6_render_e2e.py::test_render_uses_predeploy_ready_checks_and_ci_gate"
+      ],
+      "notes": "Web Service + Worker في الإنتاج وخدمة Combined في staging."
+    },
+    {
+      "id": "OPS-007",
+      "category": "التحديثات",
+      "title": "عقد توافق للإصدار والمخطط والأحداث والأزرار",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/services/update_safety.py",
+        "app/domain/update_safety.py"
+      ],
+      "database_objects": [
+        "cp_release_compatibility"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_7_lts_turbo.py::test_cache_generations_and_release_contracts"
+      ],
+      "notes": "يمنع نشر إصدار يكسر الحد الأدنى للمخطط أو الإصدار السابق."
+    },
+    {
+      "id": "OPS-008",
+      "category": "الاعتمادية",
+      "title": "Graceful drain لتحديثات Telegram أثناء نشر Render",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/services/telegram_updates.py",
+        "app/api/server.py"
+      ],
+      "database_objects": [
+        "cp_telegram_update_inbox"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_7_lts_turbo.py::test_fast_webhook_and_graceful_drain_are_integrated"
+      ],
+      "notes": "يرفض Webhook مؤقتاً أثناء التصريف ويكمل الدفعة المحجوزة قبل الإغلاق."
+    },
+    {
+      "id": "PERF-003",
+      "category": "الأداء",
+      "title": "إيقاظ فوري وسحب دفعات لصندوق تحديثات Telegram",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/services/telegram_updates.py",
+        "app/core/context.py"
+      ],
+      "database_objects": [
+        "cp_telegram_update_inbox"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_7_lts_turbo.py::test_update_inbox_claims_in_ordered_batches"
+      ],
+      "notes": "يقلل polling الخامل وعدد رحلات قاعدة البيانات مع بقاء SKIP LOCKED."
+    },
+    {
+      "id": "PERF-004",
+      "category": "الأداء",
+      "title": "Fast JSON وuvloop وhttptools مع حدود Uvicorn",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/api/server.py",
+        "app/main.py",
+        "requirements.txt"
+      ],
+      "database_objects": [],
+      "acceptance_tests": [
+        "tests/test_v11_7_lts_turbo.py::test_fast_webhook_and_graceful_drain_are_integrated"
+      ],
+      "notes": "orjson لمسارات Webhook وHTTP parser سريع دون تغيير منطق الأعمال."
+    },
+    {
+      "id": "CFG-001",
+      "category": "الإعدادات",
+      "title": "Cache generations مشتركة بين Web وWorker",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/services/cache_coherence.py",
+        "app/services/menus.py",
+        "app/services/features.py"
+      ],
+      "database_objects": [
+        "cp_runtime_config_generations"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_7_lts_turbo.py::test_cache_generations_and_release_contracts"
+      ],
+      "notes": "تظهر تغييرات المالك على جميع العمليات خلال نافذة قصيرة دون انتظار TTL طويل."
+    },
+    {
+      "id": "CBK-001",
+      "category": "التوافق",
+      "title": "توافق أزرار Inline القديمة والمرقمة بالإصدار",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/domain/callback_compat.py",
+        "app/bot/middleware.py"
+      ],
+      "database_objects": [],
+      "acceptance_tests": [
+        "tests/test_v11_7_lts_turbo.py::test_old_and_versioned_callbacks_remain_compatible"
+      ],
+      "notes": "Aliases append-only وتطبيع قبل مطابقة Routers لحماية الأزرار القديمة في المحادثات."
+    },
+    {
+      "id": "OPT-001",
+      "category": "التكاملات الاختيارية",
+      "title": "تفعيل Gemini مع بوابة جاهزية آمنة",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/core/config.py",
+        "app/integrations/ai/gemini.py",
+        "app/bot/handlers/support.py"
+      ],
+      "database_objects": [
+        "cp_feature_flags"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_7_1_all_features_ready.py::test_missing_external_credentials_are_safe_pending_not_startup_failures"
+      ],
+      "notes": "FEATURE_GEMINI مفعّل؛ المسار التشغيلي ينتظر GEMINI_API_KEY ولا يمنع إقلاع البوت."
+    },
+    {
+      "id": "OPT-002",
+      "category": "المدفوعات",
+      "title": "تفعيل Mastercard مع حالة pending configuration",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/core/config.py",
+        "app/integrations/payments/mastercard.py",
+        "app/bot/handlers/payments.py",
+        "app/api/server.py"
+      ],
+      "database_objects": [
+        "cp_feature_flags"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_7_1_all_features_ready.py::test_connectors_become_ready_only_with_complete_configuration"
+      ],
+      "notes": "لا تُفتح جلسة دفع قبل اكتمال بيانات البوابة والـWebhook."
+    },
+    {
+      "id": "OPT-003",
+      "category": "المالية",
+      "title": "تفعيل طلبات سحب المنصات بعد جاهزية marketplace",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/core/config.py",
+        "app/services/finance.py",
+        "app/services/authorization.py",
+        "app/bot/handlers/provider.py"
+      ],
+      "database_objects": [
+        "cp_withdrawal_requests",
+        "cp_ledger_entries"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_7_1_all_features_ready.py::test_connectors_become_ready_only_with_complete_configuration"
+      ],
+      "notes": "الميزة مفعلة ولكن السحب المالي لا يفتح قبل gateway_marketplace وبوابة دفع جاهزة."
+    },
+    {
+      "id": "OPT-004",
+      "category": "النسخ الاحتياطي",
+      "title": "تفعيل النسخ الاحتياطي المشفر مع S3 readiness",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/core/config.py",
+        "app/services/backups.py",
+        "app/tasks/scheduler.py",
+        "ops/render_predeploy.py"
+      ],
+      "database_objects": [
+        "cp_backup_runs"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_7_1_all_features_ready.py::test_missing_external_credentials_are_safe_pending_not_startup_failures"
+      ],
+      "notes": "BACKUP_ENABLED=true ولا تبدأ المهام قبل اكتمال S3 credentials."
+    },
+    {
+      "id": "OPT-005",
+      "category": "الأمان",
+      "title": "تفعيل فحص الصور المحلي مع ترقية Google Vision",
+      "priority": "P1",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/services/image_moderation.py",
+        "app/services/branding.py",
+        "app/core/config.py"
+      ],
+      "database_objects": [],
+      "acceptance_tests": [
+        "tests/test_v11_7_1_all_features_ready.py::test_all_optional_features_are_requested_by_default"
+      ],
+      "notes": "الفحص المحلي يعمل دائماً؛ SafeSearch يعمل عند إضافة GOOGLE_VISION_API_KEY."
+    },
+    {
+      "id": "OPT-006",
+      "category": "الأدلة",
+      "title": "تفعيل أرشفة الأدلة الخارجية المشفرة مع S3 readiness",
+      "priority": "P0",
+      "status": "APPROVED",
+      "implementation_status": "IMPLEMENTED",
+      "code_modules": [
+        "app/core/config.py",
+        "app/services/evidence.py"
+      ],
+      "database_objects": [
+        "cp_evidence_assets",
+        "cp_evidence_access_logs"
+      ],
+      "acceptance_tests": [
+        "tests/test_v11_7_1_all_features_ready.py::test_connectors_become_ready_only_with_complete_configuration"
+      ],
+      "notes": "المرجع المشفر في Telegram يبقى فعالاً إلى أن تكتمل إعدادات S3."
+    }
+  ]
+}

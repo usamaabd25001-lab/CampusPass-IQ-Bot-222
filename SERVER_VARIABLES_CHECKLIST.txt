@@ -1,0 +1,32 @@
+CampusPass IQ V6.5 Phase 1 — minimum deployment checklist
+
+[ ] BOT_TOKEN صحيح وغير منشور
+[ ] ADMIN_IDS يحتوي رقم Telegram الرقمي لمالك البوت
+[ ] DATABASE_URL يشير إلى PostgreSQL خارجي دائم
+[ ] ENCRYPTION_KEY ثابت ومحفوظ خارج السيرفر
+[ ] ENVIRONMENT=production
+[ ] REQUIRE_EXTERNAL_DATABASE=true
+[ ] DB_SSL_MODE=verify-full
+[ ] MONEY_FLOW_MODEL=provider_direct_prepaid_commission
+[ ] FEATURE_PROVIDER_WITHDRAWALS=true
+[ ] FEATURE_MASTERCARD=true
+[ ] REDIS_URL أضيف قبل الإطلاق المدفوع
+[ ] REQUIRE_REDIS_IN_PRODUCTION=true فقط بعد التأكد أن Redis يعمل
+[ ] /health/live يرجع 200
+[ ] /health/ready يرجع 200
+[ ] /version يعرض 6.5.0-commercial-hardening-phase1
+[ ] /diagnostics لا يعرض مهام عالقة أو فاشلة
+[ ] نسخة احتياطية واستعادة تجريبية نجحت
+
+[ ] GEMINI_API_KEY=
+[ ] PAYMENT_GATEWAY_CREATE_URL=
+[ ] PAYMENT_GATEWAY_API_KEY=
+[ ] PAYMENT_GATEWAY_MERCHANT_ID=
+[ ] PAYMENT_WEBHOOK_SECRET=
+[ ] BACKUP_S3_BUCKET=
+[ ] BACKUP_S3_ACCESS_KEY=
+[ ] BACKUP_S3_SECRET_KEY=
+[ ] GOOGLE_VISION_API_KEY=
+[ ] EVIDENCE_S3_BUCKET=
+[ ] EVIDENCE_S3_ACCESS_KEY=
+[ ] EVIDENCE_S3_SECRET_KEY=

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>تقرير المزود — {{ data.provider.name_en or data.provider.name_ar }}</title>
+  <style>
+    @page { size: A4 portrait; margin: 13mm; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:#edf1f6; color:#172235; font-family:Arial,Tahoma,sans-serif; font-size:12px; }
+    .page { width:210mm; min-height:297mm; margin:0 auto; padding:15mm; background:#fff; }
+    .top { display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid {{ branding.primary_color }}; padding-bottom:14px; }
+    .logo { width:62px; height:62px; object-fit:contain; border:1px solid #d8e0e9; border-radius:13px; padding:7px; }
+    h1 { margin:0; color:{{ branding.dark_color }}; font-size:22px; text-align:center; }
+    .en { direction:ltr; text-align:center; margin-top:5px; font-weight:700; color:#526074; }
+    .meta { text-align:center; color:#768296; margin-top:6px; font-size:10px; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:18px; }
+    .box { border:1px solid #dce3ec; border-radius:10px; padding:11px; }
+    .label { color:#6f7b8c; font-size:10px; }
+    .value { color:{{ branding.dark_color }}; font-size:17px; font-weight:800; margin-top:6px; }
+    h2 { margin:20px 0 8px; padding:7px 10px; background:#f2f5f9; border-right:4px solid {{ branding.secondary_color }}; font-size:14px; }
+    table { width:100%; border-collapse:collapse; }
+    th { background:{{ branding.dark_color }}; color:#fff; padding:7px; text-align:right; }
+    td { padding:7px; border-bottom:1px solid #e4e9ef; }
+    tr:nth-child(even) td { background:#f8fafc; }
+    .footer { margin-top:24px; padding-top:12px; border-top:1px solid #dce3ec; color:#6d798b; font-size:9px; }
+    @media print { body{background:#fff}.page{width:auto;min-height:auto;margin:0;padding:0} }
+  </style>
+</head>
+<body>
+<main class="page">
+  <div class="top">
+    {% if branding.brand_logo_src %}<img class="logo" src="{{ branding.brand_logo_src }}" alt="CampusPass IQ">{% else %}<div></div>{% endif %}
+    <div><h1>التقرير التشغيلي اليومي</h1><div class="en">{{ data.provider.name_en or data.provider.name_ar }}</div><div class="meta">{{ data.provider.name_ar }} · Report #{{ report.id }}</div></div>
+    {% if branding.provider_logo_available %}<img class="logo" src="{{ branding.provider_logo_src }}" alt="Provider Logo">{% else %}<div style="width:62px"></div>{% endif %}
+  </div>
+  <div class="grid">
+    <div class="box"><div class="label">الطلبات</div><div class="value">{{ data.summary.orders or 0 }}</div></div>
+    <div class="box"><div class="label">المبيعات</div><div class="value">{{ amount(data.summary.sales or 0) }}</div></div>
+    <div class="box"><div class="label">صافي المزود</div><div class="value">{{ amount(data.summary.provider_net or 0) }}</div></div>
+  </div>
+  <h2>حالات الطلبات</h2>
+  <table><thead><tr><th>الحالة</th><th>العدد</th></tr></thead><tbody>
+  {% for status,count in data.statuses.items() %}<tr><td dir="ltr">{{ status }}</td><td>{{ count }}</td></tr>{% endfor %}
+  </tbody></table>
+  <div class="footer">Official CampusPass IQ operational report · {{ report_filename }}</div>
+</main>
+</body>
+</html>

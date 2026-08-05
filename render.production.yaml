@@ -106,6 +106,26 @@ services:
         value: "120"
       - key: PROCESSING_MESSAGE_TEXT
         value: "⏳ يرجى الانتظار..."
+      - key: FEATURE_GEMINI
+        value: "true"
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: FEATURE_MASTERCARD
+        value: "true"
+      - key: FEATURE_PROVIDER_WITHDRAWALS
+        value: "true"
+      - key: MONEY_FLOW_MODEL
+        value: gateway_marketplace
+      - key: BACKUP_ENABLED
+        value: "true"
+      - key: IMAGE_MODERATION_ENABLED
+        value: "true"
+      - key: IMAGE_MODERATION_PROVIDER
+        value: auto
+      - key: IMAGE_MODERATION_FAIL_CLOSED
+        value: "false"
+      - key: EVIDENCE_EXTERNAL_STORAGE_ENABLED
+        value: "true"
       - key: FEATURE_DISPUTES
         value: "false"
       - key: LOG_LEVEL
@@ -165,6 +185,26 @@ services:
         value: "900"
       - key: DB_PREPARED_STATEMENT_CACHE_SIZE
         value: "0"
+      - key: FEATURE_GEMINI
+        value: "true"
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: FEATURE_MASTERCARD
+        value: "true"
+      - key: FEATURE_PROVIDER_WITHDRAWALS
+        value: "true"
+      - key: MONEY_FLOW_MODEL
+        value: gateway_marketplace
+      - key: BACKUP_ENABLED
+        value: "true"
+      - key: IMAGE_MODERATION_ENABLED
+        value: "true"
+      - key: IMAGE_MODERATION_PROVIDER
+        value: auto
+      - key: IMAGE_MODERATION_FAIL_CLOSED
+        value: "false"
+      - key: EVIDENCE_EXTERNAL_STORAGE_ENABLED
+        value: "true"
       - key: FEATURE_DISPUTES
         value: "false"
       - key: LOG_LEVEL
