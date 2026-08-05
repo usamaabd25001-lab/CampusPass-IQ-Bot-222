@@ -348,6 +348,7 @@ class ProviderPaymentMethodStates(StatesGroup):
     balance_mode = State()
     recipient = State()
     instructions = State()
+    proof_guide = State()
 
 
 class ProviderTicketReplyStates(StatesGroup):
