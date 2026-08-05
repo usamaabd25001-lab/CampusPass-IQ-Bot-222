@@ -343,12 +343,6 @@ class ProviderInventoryStates(StatesGroup):
 
 
 class ProviderPaymentMethodStates(StatesGroup):
-    """FSM states for provider payment-method creation/editing.
-
-    Keep every state referenced by provider_catalog.py and middleware.py here.
-    This is intentionally additive and preserves all legacy state names.
-    """
-
     name = State()  # legacy compatibility; V11.2 derives the canonical name automatically.
     method_type = State()
     balance_mode = State()

@@ -1428,6 +1428,60 @@ async def _v11_7_1_all_features_ready(session: AsyncSession) -> None:
     await session.flush()
 
 
+async def _v11_7_2_render_schema_repair(session: AsyncSession) -> None:
+    """Repair additive schema drift on long-lived production databases.
+
+    ``Base.metadata.create_all`` creates missing tables but deliberately does not
+    add columns to tables that already exist. Some databases upgraded from a
+    pre-V11.1 release therefore lack ``cp_payment_proofs.file_fingerprint`` even
+    though the current ORM model selects it. This migration is idempotent and
+    additive: it never deletes or rewrites payment proofs.
+    """
+
+    connection = await session.connection()
+    tables = await connection.run_sync(
+        lambda sync_connection: set(inspect(sync_connection).get_table_names())
+    )
+    if "cp_payment_proofs" not in tables:
+        return
+
+    columns = await connection.run_sync(
+        lambda sync_connection: {
+            column["name"]
+            for column in inspect(sync_connection).get_columns("cp_payment_proofs")
+        }
+    )
+    if "file_fingerprint" not in columns:
+        await session.execute(
+            text(
+                "ALTER TABLE cp_payment_proofs "
+                "ADD COLUMN file_fingerprint VARCHAR(64) NULL"
+            )
+        )
+
+    await session.execute(
+        text(
+            "CREATE INDEX IF NOT EXISTS ix_cp_payment_proofs_file_fingerprint "
+            "ON cp_payment_proofs (file_fingerprint)"
+        )
+    )
+
+    release = await session.scalar(
+        select(SystemSetting).where(SystemSetting.key == "operations.release_version")
+    )
+    if release:
+        release.value = "11.7.2-render-schema-repair"
+    else:
+        session.add(
+            SystemSetting(
+                key="operations.release_version",
+                value="11.7.2-render-schema-repair",
+                is_secret=False,
+            )
+        )
+    await session.flush()
+
+
 MIGRATIONS: tuple[Migration, ...] = (
     Migration(
         version="3.2.0-ui-manager",
@@ -1661,6 +1715,14 @@ MIGRATIONS: tuple[Migration, ...] = (
             "activate local image moderation, and upgrade Gemini defaults"
         ),
         apply=_v11_7_1_all_features_ready,
+    ),
+    Migration(
+        version="11.7.2-render-schema-repair",
+        description=(
+            "Repair additive payment-proof schema drift on long-lived databases without "
+            "deleting or rewriting existing rows"
+        ),
+        apply=_v11_7_2_render_schema_repair,
     ),
 
 )

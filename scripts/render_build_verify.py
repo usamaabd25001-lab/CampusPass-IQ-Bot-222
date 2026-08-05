@@ -133,35 +133,38 @@ def verify_local_import_paths() -> int:
 
 
 def verify_render_blueprint() -> dict[str, object]:
-    text = read("render.production.yaml")
-    required = (
+    """Validate both paid production and free single-service deployment profiles."""
+    production = read("render.production.yaml")
+    for marker in (
         "type: web",
         "type: worker",
         "dockerfilePath: ./Dockerfile",
         "preDeployCommand: python ops/render_predeploy.py",
         "healthCheckPath: /health/ready",
-        "value: bot",
-        "value: worker",
-    )
-    for marker in required:
-        check(marker in text, f"render.production.yaml is missing {marker!r}")
+    ):
+        check(marker in production, f"render.production.yaml is missing {marker!r}")
 
-    # The user explicitly does not use an automated Mastercard gateway.
+    free = read("render.free.yaml")
+    for marker in (
+        "type: web",
+        "plan: free",
+        "dockerfilePath: ./Dockerfile",
+        "healthCheckPath: /health/live",
+        "value: combined",
+        "- key: REQUIRE_REDIS_IN_PRODUCTION",
+        'value: "false"',
+    ):
+        check(marker in free, f"render.free.yaml is missing {marker!r}")
+    check("type: worker" not in free, "free profile must not create a paid background worker")
+    check("preDeployCommand:" not in free, "free profile must not use paid pre-deploy commands")
+    check("REDIS_URL" not in free, "free profile must not require Redis during initial deploy")
     check(
-        text.count("- key: FEATURE_MASTERCARD") == 2,
-        "FEATURE_MASTERCARD must be declared for Web and Worker",
-    )
-    check(
-        text.count('value: "false"') >= 4,
-        "expected disabled optional financial feature values are missing",
-    )
-    check(
-        text.count("autoDeployTrigger: commit") == 2,
-        "both services must deploy automatically on commits",
+        free.count("autoDeployTrigger: commit") == 1,
+        "free web service must deploy automatically on commits",
     )
     return {
-        "web": "campuspass-v11-7-web" in text,
-        "worker": "campuspass-v11-7-worker" in text,
+        "paid_profile": "web+worker",
+        "free_profile": "single-combined-web",
         "mastercard_gateway": "disabled",
     }
 
