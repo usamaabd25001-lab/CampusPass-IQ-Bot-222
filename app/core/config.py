@@ -68,7 +68,7 @@ class Settings(BaseSettings):
         default="منصة اشتراكات وخدمات طلابية متعددة المزودين.", alias="BOT_DESCRIPTION"
     )
     welcome_text: str = Field(
-        default="أهلًا بك في CampusPass IQ Bot 👋\\nمنصة الاشتراكات والخدمات الطلابية.",
+        default="أهلًا بك في CampusPass IQ Bot 👋\nمنصة الاشتراكات والخدمات الطلابية.",
         alias="WELCOME_TEXT",
     )
     help_text: str = Field(default="اختر القسم المطلوب من القائمة.", alias="HELP_TEXT")
@@ -100,13 +100,10 @@ class Settings(BaseSettings):
     )
     privacy_text: str = Field(
         default=(
-            "نلتزم التزاماً كاملاً بحماية خصوصيتك. تُجمع بياناتك الأساسية وتُعالج   "
+            "نلتزم التزاماً كاملاً بحماية خصوصيتك. تُجمع بياناتك الأساسية وتُعالج "
             "وحصراً لغرض إدارة اشتراكاتك وتقديم الدعم الفني لك. جميع معلوماتك محفوظة "
             "في بيئة آمنة، ولا يتم مشاركتها مع أي جهات خارجية أو استخدامها لأغراض تجارية "
             "دون موافقتك الصريحة."
-        ),
-        alias="PRIVACY_TEXT",
-    )
         ),
         alias="PRIVACY_TEXT",
     )
