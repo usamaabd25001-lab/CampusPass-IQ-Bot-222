@@ -1,12 +1,20 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+import json
 
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
+from app.core.config import Settings
 from app.core.utils import public_id
 from app.db.models import (
+    DistributedJob,
+    Offer,
+    OfferStatus,
+    Order,
+    StudentSubscription,
     SupportFAQ,
     SupportTicket,
     TicketMessage,
@@ -15,12 +23,298 @@ from app.db.models import (
 )
 from app.integrations.ai.gemini import GeminiClient
 from app.services.data_protection import DataProtectionService
+from app.services.enterprise_scale import EnterpriseScaleService
 
 
 class SupportService:
-    def __init__(self, gemini: GeminiClient, data_protection: DataProtectionService) -> None:
+    AI_QUEUE = "ai_support"
+    AI_JOB_TYPE = "support_answer"
+
+    def __init__(
+        self,
+        settings: Settings,
+        gemini: GeminiClient,
+        data_protection: DataProtectionService,
+        enterprise_scale: EnterpriseScaleService,
+    ) -> None:
+        self.settings = settings
         self.gemini = gemini
         self.data_protection = data_protection
+        self.enterprise_scale = enterprise_scale
+
+    async def enqueue_ai_request(
+        self,
+        session: AsyncSession,
+        *,
+        user: User,
+        chat_id: int,
+        source_message_id: int,
+        question: str,
+        order_id: int = 0,
+    ) -> DistributedJob:
+        clean_question = self.data_protection.redact_for_ai(question).strip()
+        if len(clean_question) < 5:
+            raise ValueError("اكتب تفاصيل أكثر حتى يستطيع المساعد فهم المشكلة.")
+        if len(clean_question) > self.settings.gemini_max_question_chars:
+            raise ValueError(
+                f"اختصر السؤال إلى أقل من {self.settings.gemini_max_question_chars} حرف."
+            )
+        since = datetime.now(UTC) - timedelta(days=1)
+        recent_jobs = list(
+            (
+                await session.execute(
+                    select(DistributedJob.payload_json, DistributedJob.status)
+                    .where(
+                        DistributedJob.queue_name == self.AI_QUEUE,
+                        DistributedJob.created_at >= since,
+                    )
+                    .order_by(DistributedJob.id.desc())
+                    .limit(5000)
+                )
+            ).all()
+        )
+        own_jobs = [
+            (payload, status)
+            for payload, status in recent_jobs
+            if isinstance(payload, dict)
+            and int(payload.get("user_id", 0) or 0) == user.id
+        ]
+        used = len(own_jobs)
+        active_statuses = {"pending", "retry", "leased"}
+        pending = sum(1 for _payload, status in own_jobs if status in active_statuses)
+        if pending >= self.settings.gemini_max_pending_per_user:
+            raise ValueError(
+                "لديك استفسارات قيد المعالجة. انتظر وصول الرد قبل إرسال سؤال جديد."
+            )
+        if used >= self.settings.gemini_daily_user_limit:
+            raise ValueError(
+                "وصلت إلى الحد اليومي للمساعد الذكي. افتح تذكرة دعم وسيتم خدمتك بشرياً."
+            )
+        return await self.enterprise_scale.enqueue_job(
+            session,
+            queue_name=self.AI_QUEUE,
+            job_type=self.AI_JOB_TYPE,
+            payload={
+                "job_schema_version": 1,
+                "user_id": user.id,
+                "telegram_id": int(user.telegram_id),
+                "chat_id": int(chat_id),
+                "source_message_id": int(source_message_id),
+                "placeholder_message_id": 0,
+                "order_id": int(order_id or 0),
+                "question": clean_question,
+            },
+            idempotency_key=f"ai-support:{user.telegram_id}:{source_message_id}",
+            priority=50,
+            max_attempts=self.settings.gemini_job_max_attempts,
+        )
+
+    async def build_ai_context(
+        self,
+        session: AsyncSession,
+        *,
+        user_id: int,
+        order_id: int,
+        question: str,
+    ) -> dict:
+        user = await session.scalar(
+            select(User)
+            .options(selectinload(User.profile))
+            .where(User.id == int(user_id))
+        )
+        if user is None or user.is_banned or not user.is_active:
+            raise PermissionError("User is not eligible for AI support")
+        if user.ai_data_consent_at is None:
+            raise PermissionError("AI data consent is missing")
+
+        raw_name = (user.profile.full_name if user.profile else user.telegram_name) or "طالب"
+        first_name = raw_name.strip().split()[0][:40] if raw_name.strip() else "طالب"
+        context: dict = {
+            "platform": {
+                "name": "CampusPass IQ",
+                "scope": "اشتراكات وخدمات طلابية رقمية في العراق",
+                "terms_summary": self.settings.terms_text[:800],
+                "privacy_summary": self.settings.privacy_text[:800],
+            },
+            "user": {
+                "display_name": first_name,
+                "role": user.role,
+                "has_platform_access": bool(user.has_platform_access),
+            },
+            "order": None,
+            "active_subscriptions": [],
+            "recent_orders": [],
+            "matching_offers": [],
+            "faq": [],
+        }
+
+        subscriptions = list(
+            (
+                await session.scalars(
+                    select(StudentSubscription)
+                    .where(
+                        StudentSubscription.user_id == user.id,
+                        StudentSubscription.status.in_(
+                            [
+                                "pending",
+                                "waiting_activation",
+                                "active",
+                                "expiring",
+                                "paused",
+                                "needs_support",
+                            ]
+                        ),
+                    )
+                    .order_by(StudentSubscription.id.desc())
+                    .limit(5)
+                )
+            ).all()
+        )
+        context["active_subscriptions"] = [
+            {
+                "service": item.service_name_snapshot,
+                "provider": item.provider_name_snapshot,
+                "status": item.status,
+                "starts_at": item.starts_at.isoformat() if item.starts_at else None,
+                "ends_at": item.ends_at.isoformat() if item.ends_at else None,
+                "warranty_ends_at": (
+                    item.warranty_ends_at.isoformat() if item.warranty_ends_at else None
+                ),
+            }
+            for item in subscriptions
+        ]
+
+        recent_orders = list(
+            (
+                await session.scalars(
+                    select(Order)
+                    .options(
+                        selectinload(Order.offer).selectinload(Offer.provider),
+                        selectinload(Order.provider),
+                    )
+                    .where(Order.user_id == user.id)
+                    .order_by(Order.id.desc())
+                    .limit(3)
+                )
+            ).all()
+        )
+        context["recent_orders"] = [
+            {
+                "reference": item.public_id,
+                "status": item.status,
+                "service": item.offer.title if item.offer else "",
+                "provider": (
+                    (item.provider.name_ar or item.provider.name_en)
+                    if item.provider
+                    else (
+                        (item.offer.provider.name_ar or item.offer.provider.name_en)
+                        if item.offer and item.offer.provider
+                        else ""
+                    )
+                ),
+                "price_iqd": int(item.total_iqd),
+            }
+            for item in recent_orders
+        ]
+
+        if order_id:
+            order = await session.scalar(
+                select(Order)
+                .options(
+                    selectinload(Order.offer).selectinload(Offer.provider),
+                    selectinload(Order.provider),
+                )
+                .where(Order.id == int(order_id), Order.user_id == user.id)
+            )
+            if order is None:
+                raise PermissionError("Order does not belong to user")
+            subscription = await session.scalar(
+                select(StudentSubscription).where(StudentSubscription.order_id == order.id)
+            )
+            context["order"] = {
+                "reference": order.public_id,
+                "status": order.status,
+                "service": order.offer.title if order.offer else "",
+                "provider": (
+                    (order.offer.provider.name_ar or order.offer.provider.name_en)
+                    if order.offer and order.offer.provider
+                    else (
+                        (order.provider.name_ar or order.provider.name_en)
+                        if order.provider
+                        else ""
+                    )
+                ),
+                "price_iqd": int(order.total_iqd),
+                "delivery_type": order.offer.delivery_type if order.offer else "",
+                "duration_days": order.offer.duration_days if order.offer else None,
+                "offer_terms": (order.offer.terms[:800] if order.offer else ""),
+                "refund_policy": (order.offer.refund_policy[:800] if order.offer else ""),
+                "subscription_status": subscription.status if subscription else None,
+                "warranty_ends_at": (
+                    subscription.warranty_ends_at.isoformat()
+                    if subscription and subscription.warranty_ends_at
+                    else None
+                ),
+            }
+
+        words = []
+        for word in question.replace("؟", " ").replace("،", " ").split():
+            token = word.strip(".,:;!?()[]{}\"'ـ-")
+            if len(token) >= 3 and token not in words:
+                words.append(token)
+            if len(words) >= 5:
+                break
+        if words:
+            offer_filters = [Offer.title.ilike(f"%{word}%") for word in words]
+            offers = list(
+                (
+                    await session.scalars(
+                        select(Offer)
+                        .options(selectinload(Offer.provider))
+                        .where(
+                            Offer.is_active.is_(True),
+                            Offer.status == OfferStatus.ACTIVE.value,
+                            or_(*offer_filters),
+                        )
+                        .order_by(Offer.id.desc())
+                        .limit(6)
+                    )
+                ).all()
+            )
+            context["matching_offers"] = [
+                {
+                    "title": offer.title,
+                    "provider": (offer.provider.name_ar or offer.provider.name_en) if offer.provider else "",
+                    "price_iqd": int(offer.price_iqd),
+                    "duration_days": offer.duration_days,
+                    "delivery_type": offer.delivery_type,
+                    "terms": offer.terms[:400],
+                }
+                for offer in offers
+            ]
+
+        faqs = list(
+            (
+                await session.scalars(
+                    select(SupportFAQ)
+                    .where(SupportFAQ.is_active.is_(True))
+                    .order_by(SupportFAQ.sort_order, SupportFAQ.id)
+                    .limit(10)
+                )
+            ).all()
+        )
+        context["faq"] = [
+            {"question": item.question[:250], "answer": item.answer[:600]}
+            for item in faqs
+        ]
+        return context
+
+    async def generate_ai_answer(self, question: str, context: dict) -> str:
+        safe_question = self.data_protection.redact_for_ai(question)
+        safe_context = self.data_protection.redact_for_ai(
+            json.dumps(context, ensure_ascii=False, sort_keys=True)
+        )
+        return await self.gemini.answer(safe_question, safe_context)
 
     async def faqs(self, session: AsyncSession) -> list[SupportFAQ]:
         return list(

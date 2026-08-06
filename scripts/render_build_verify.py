@@ -158,6 +158,12 @@ def verify_render_blueprint() -> dict[str, object]:
     check("type: worker" not in free, "free profile must not create a paid background worker")
     check("preDeployCommand:" not in free, "free profile must not use paid pre-deploy commands")
     check("REDIS_URL" not in free, "free profile must not require Redis during initial deploy")
+    check('BACKUP_ENABLED\n        value: "true"' not in free, "free profile must not force backup without S3")
+    check('EVIDENCE_EXTERNAL_STORAGE_ENABLED\n        value: "true"' not in free, "free profile must not force external evidence storage")
+    check("- key: GEMINI_API_KEY" in free, "free profile must prompt for GEMINI_API_KEY")
+    check("- key: GEMINI_MAX_PENDING_PER_USER" in free, "free profile must cap pending AI jobs")
+    check("- key: GEMINI_CIRCUIT_FAILURE_THRESHOLD" in free, "free profile must configure the AI circuit breaker")
+    check(production.count("- key: GEMINI_API_KEY") == 2, "paid split profile needs the Gemini key in web and worker")
     check(
         free.count("autoDeployTrigger: commit") == 1,
         "free web service must deploy automatically on commits",
@@ -168,6 +174,57 @@ def verify_render_blueprint() -> dict[str, object]:
         "mastercard_gateway": "disabled",
     }
 
+
+
+def verify_ai_support_integration() -> dict[str, object]:
+    gemini = read("app/integrations/ai/gemini.py")
+    prompt = read("app/integrations/ai/prompt.py")
+    support = read("app/services/support.py")
+    worker = read("app/tasks/ai_support_worker.py")
+    handler = read("app/bot/handlers/support.py")
+    main = read("app/main.py")
+
+    for marker in (
+        "systemInstruction",
+        "<trusted_context>",
+        "<user_question>",
+        "_ensure_circuit_closed",
+        "_get_cached",
+        "asyncio.Semaphore",
+    ):
+        check(marker in gemini, f"Gemini client is missing {marker!r}")
+    for marker in (
+        "CampusPass IQ",
+        "لا تطلب ولا تعرض كلمات المرور",
+        "لا تنفذ إجراءات فعلية",
+    ):
+        check(marker in prompt, f"AI system prompt is missing {marker!r}")
+    for marker in (
+        'AI_QUEUE = "ai_support"',
+        "enqueue_ai_request",
+        "build_ai_context",
+        "gemini_max_pending_per_user",
+        "ai_data_consent_at",
+    ):
+        check(marker in support, f"Support service is missing {marker!r}")
+    for marker in (
+        "class AISupportWorker",
+        "claim_jobs",
+        "finish_job",
+        "ChatAction.TYPING",
+        "gemini_retry_attempts",
+    ):
+        check(marker in worker, f"AI worker is missing {marker!r}")
+    check("support:aiunresolved:" in handler, "AI-to-human escalation callback is missing")
+    check("AISupportWorker" in main, "AI worker is not wired into app.main")
+    check("google.generativeai" not in gemini, "deprecated blocking Gemini SDK path remains")
+    return {
+        "durable_queue": "cp_distributed_jobs",
+        "prompt_isolation": True,
+        "bounded_concurrency": True,
+        "retry_and_circuit_breaker": True,
+        "human_escalation": True,
+    }
 
 def verify_runtime_imports() -> dict[str, object]:
     try:
@@ -231,6 +288,7 @@ def verify_runtime_imports() -> dict[str, object]:
     # Import the real process entry points. No external calls happen at import time.
     try:
         import app.main  # noqa: F401
+        import app.tasks.ai_support_worker  # noqa: F401
         import ops.render_predeploy  # noqa: F401
     except Exception as exc:
         fail(f"runtime entry-point import failed: {type(exc).__name__}: {exc}")
@@ -257,12 +315,17 @@ def main() -> None:
     state_groups, state_references = verify_state_references()
     local_imports = verify_local_import_paths()
     blueprint = verify_render_blueprint()
+    ai_support = verify_ai_support_integration()
     runtime = {"skipped": True} if static_only else verify_runtime_imports()
 
     dockerfile = read("Dockerfile")
     check(
         "python scripts/render_build_verify.py" in dockerfile,
         "Dockerfile is not using the current Render build verifier",
+    )
+    check(
+        "python scripts/validate_ai_support_integration.py" in dockerfile,
+        "Dockerfile is not running the offline AI integration validation",
     )
     check(
         "python scripts/verify_v10_railway_turbo.py" not in dockerfile,
@@ -278,6 +341,7 @@ def main() -> None:
                 "state_references": state_references,
                 "local_app_imports_checked": local_imports,
                 "blueprint": blueprint,
+                "ai_support": ai_support,
                 "runtime": runtime,
             },
             ensure_ascii=False,

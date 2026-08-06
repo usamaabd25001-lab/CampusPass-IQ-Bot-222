@@ -1,3 +1,12 @@
+## 11.7.4-durable-ai-support — 2026-08-06
+
+- Added a PostgreSQL-backed durable queue for Gemini support requests in Render Free combined mode.
+- Added strict system instructions, minimum-context injection, explicit AI consent, and secret redaction.
+- Added bounded concurrency, timeouts, retries, cache, circuit breaker, pending/daily limits, and retention cleanup.
+- Added continuous Telegram typing feedback and automatic human-ticket escalation after final failure.
+- Preserved the existing email/OTP, payment, provider, student, owner, warranty, reporting, and navigation flows.
+- Added offline mocked Gemini validation and strengthened Render build verification.
+
 
 ## 11.7.1-all-features-ready
 

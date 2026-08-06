@@ -1,4 +1,4 @@
-# CampusPass IQ V11.7.3 - Render Free Tier
+# CampusPass IQ V11.7.4 - Render Free Tier
 # One free web service runs both Telegram webhook handling and scheduled worker tasks.
 # No paid background worker, no paid pre-deploy command, and Redis is optional.
 services:
@@ -79,6 +79,32 @@ services:
         value: Asia/Baghdad
       - key: FEATURE_GEMINI
         value: "true"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: GEMINI_TIMEOUT_SECONDS
+        value: "45"
+      - key: GEMINI_DAILY_USER_LIMIT
+        value: "20"
+      - key: GEMINI_MAX_PENDING_PER_USER
+        value: "2"
+      - key: GEMINI_RETRY_ATTEMPTS
+        value: "3"
+      - key: GEMINI_JOB_MAX_ATTEMPTS
+        value: "3"
+      - key: GEMINI_JOB_RETENTION_DAYS
+        value: "14"
+      - key: GEMINI_CIRCUIT_FAILURE_THRESHOLD
+        value: "5"
+      - key: GEMINI_CIRCUIT_RESET_SECONDS
+        value: "60"
+      - key: GEMINI_CACHE_TTL_SECONDS
+        value: "300"
+      - key: GEMINI_CACHE_MAX_ENTRIES
+        value: "200"
+      - key: AI_CONCURRENCY_LIMIT
+        value: "3"
       - key: FEATURE_MASTERCARD
         value: "false"
       - key: FEATURE_PROVIDER_WITHDRAWALS
@@ -86,7 +112,13 @@ services:
       - key: MONEY_FLOW_MODEL
         value: provider_direct_prepaid_commission
       - key: BACKUP_ENABLED
-        value: "true"
+        value: "false"
+      - key: BACKUP_STORAGE_BACKEND
+        value: disabled
+      - key: AUTO_PRE_DEPLOY_BACKUP
+        value: "false"
+      - key: REQUIRE_PRE_DEPLOY_BACKUP
+        value: "false"
       - key: IMAGE_MODERATION_ENABLED
         value: "true"
       - key: IMAGE_MODERATION_PROVIDER
@@ -94,7 +126,9 @@ services:
       - key: IMAGE_MODERATION_FAIL_CLOSED
         value: "false"
       - key: EVIDENCE_EXTERNAL_STORAGE_ENABLED
-        value: "true"
+        value: "false"
+      - key: REQUIRE_EXTERNAL_EVIDENCE_STORAGE_IN_PRODUCTION
+        value: "false"
       - key: FEATURE_DISPUTES
         value: "false"
       - key: LOG_LEVEL

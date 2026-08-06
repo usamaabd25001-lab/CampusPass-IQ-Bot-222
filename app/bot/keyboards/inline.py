@@ -8,6 +8,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from app.bot.callbacks import CallbackPayloadError, MAX_CALLBACK_BYTES, callback_size
 from app.domain.student_commerce import format_offer_button
+from app.bot.ui.button_styles import apply_button_style_policy
 
 
 def validate_callback_markup(markup: InlineKeyboardMarkup | None) -> InlineKeyboardMarkup | None:
@@ -20,6 +21,7 @@ def validate_callback_markup(markup: InlineKeyboardMarkup | None) -> InlineKeybo
 
     if markup is None:
         return None
+    markup = apply_button_style_policy(markup)
     for row in markup.inline_keyboard:
         for button in row:
             value = button.callback_data
@@ -136,7 +138,7 @@ def categories_keyboard(categories: list) -> InlineKeyboardMarkup:
         builder.button(
             text=f"{item.emoji} {item.name}", callback_data=f"cat:{item.id}", style="primary"
         )
-    builder.button(text="❤️ المفضلة", callback_data="favorites:list", style="danger")
+    builder.button(text="❤️ المفضلة", callback_data="favorites:list", style="primary")
     builder.adjust(2)
     return builder.as_markup()
 
@@ -467,6 +469,28 @@ def solved_keyboard(order_id: int = 0) -> InlineKeyboardMarkup:
             ],
         ]
     )
+
+
+def ai_support_result_keyboard(job_id: int, *, failed: bool = False) -> InlineKeyboardMarkup:
+    rows: list[list[InlineKeyboardButton]] = []
+    if not failed:
+        rows.append(
+            [
+                InlineKeyboardButton(
+                    text="✅ تم حل المشكلة", callback_data="support:solved", style="success"
+                )
+            ]
+        )
+    rows.append(
+        [
+            InlineKeyboardButton(
+                text="🎫 فتح تذكرة دعم",
+                callback_data=f"support:aiunresolved:{int(job_id)}",
+                style="danger" if failed else "primary",
+            )
+        ]
+    )
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 @navigable_keyboard

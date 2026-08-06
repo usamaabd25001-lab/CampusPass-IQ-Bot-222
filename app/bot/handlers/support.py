@@ -9,14 +9,14 @@ from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMar
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.bot.keyboards.inline import solved_keyboard, support_faq_keyboard, with_navigation
+from app.bot.keyboards.inline import ai_support_result_keyboard, solved_keyboard, support_faq_keyboard, with_navigation
 from app.bot.states import BotIssueStates, SupportStates
 from app.bot.ui import edit_or_send, callback_notice
 from app.core.config import Settings
 from app.core.presentation import sender_role_label, ticket_status_label
 from app.core.errors import AuthorizationError, ResourceNotFoundError
 from app.core.utils import safe
-from app.db.models import EvidenceAsset, SupportFAQ, SupportTicket, User
+from app.db.models import DistributedJob, EvidenceAsset, SupportFAQ, SupportTicket, User
 from app.services.container import Services
 
 logger = logging.getLogger(__name__)
@@ -392,60 +392,79 @@ async def support_custom_question(
     if len(question) < 5:
         await message.answer("اكتب تفاصيل أكثر.")
         return
+    if len(question) > services.settings.gemini_max_question_chars:
+        await message.answer(
+            f"اختصر السؤال إلى أقل من {services.settings.gemini_max_question_chars} حرف."
+        )
+        return
     data = await state.get_data()
     order_id = int(data.get("support_order_id", 0))
-    context = ""
     if order_id and message.from_user:
         try:
-            _actor, order = await services.authorization.require_owned_order(
+            await services.authorization.require_owned_order(
                 session, message.from_user.id, order_id
             )
         except (AuthorizationError, ResourceNotFoundError):
             await state.clear()
             await message.answer("الطلب غير موجود أو لا يخص حسابك.")
             return
-        loaded = await services.orders.get(session, order.id)
-        if loaded:
-            context = f"نوع العرض: {loaded.offer.delivery_type}; حالة الطلب: {loaded.status}"
+
     user = await services.users.get(session, message.from_user.id) if message.from_user else None
-    ai_enabled = await services.features.enabled(session, "gemini", services.settings.gemini_ready)
-    ai_answer = (
-        await services.support.ask_ai(question, context)
-        if ai_enabled and user and user.ai_data_consent_at
-        else None
+    ai_enabled = await services.features.enabled(
+        session, "gemini", services.settings.gemini_ready
     )
-    await state.update_data(support_question=question, support_ai_answer=ai_answer or "")
+    if ai_enabled and user and user.ai_data_consent_at:
+        try:
+            job = await services.support.enqueue_ai_request(
+                session,
+                user=user,
+                chat_id=message.chat.id,
+                source_message_id=message.message_id,
+                question=question,
+                order_id=order_id,
+            )
+        except ValueError as exc:
+            await message.answer(str(exc))
+            return
+        placeholder = await message.answer(
+            "🤖 تم استلام سؤالك. المساعد يراجع بيانات الطلب المسموح بها الآن…\n"
+            "يمكنك متابعة استخدام البوت، وسيصل الرد هنا تلقائياً."
+        )
+        job.payload_json = {
+            **(job.payload_json or {}),
+            "placeholder_message_id": int(placeholder.message_id),
+        }
+        await session.flush()
+        await state.clear()
+        return
+
+    await state.update_data(support_question=question, support_ai_answer="")
     await state.set_state(None)
-    if ai_answer:
-        await message.answer(
-            f"🤖 <b>المساعد</b>\n\n{safe(ai_answer)}", reply_markup=solved_keyboard(order_id)
-        )
+    if not ai_enabled:
+        reason = "🤖 المساعد الذكي غير مفعّل حاليًا من إدارة المنصة."
+    elif not user or not user.ai_data_consent_at:
+        reason = "🔐 المساعد الذكي يحتاج موافقتك على استخدام السياق المنقّح من قسم الخصوصية أولًا."
     else:
-        if not ai_enabled:
-            reason = "🤖 المساعد الذكي غير مفعّل حاليًا من إدارة المنصة."
-        elif not user or not user.ai_data_consent_at:
-            reason = "🔐 المساعد الذكي يحتاج موافقتك على استخدام السياق المنقّح من قسم الخصوصية أولًا."
-        else:
-            reason = "⚠️ المساعد الذكي يواجه مشكلة مؤقتة في الاتصال."
-        await message.answer(
-            reason + "\n\nهل تريد تحويل السؤال إلى مزود الخدمة؟",
-            reply_markup=InlineKeyboardMarkup(
-                inline_keyboard=[
-                    [
-                        InlineKeyboardButton(
-                            text="✅ نعم، افتح تذكرة",
-                            callback_data=f"support:unresolved:{order_id}",
-                            style="success",
-                        )
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text="↩️ رجوع", callback_data=f"support:custom:{order_id}"
-                        )
-                    ],
-                ]
-            ),
-        )
+        reason = "⚠️ المساعد الذكي غير متاح مؤقتاً."
+    await message.answer(
+        reason + "\n\nهل تريد تحويل السؤال إلى مزود الخدمة؟",
+        reply_markup=InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text="✅ نعم، افتح تذكرة",
+                        callback_data=f"support:unresolved:{order_id}",
+                        style="success",
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text="↩️ رجوع", callback_data=f"support:custom:{order_id}"
+                    )
+                ],
+            ]
+        ),
+    )
 
 
 @router.callback_query(F.data == "support:solved")
@@ -453,6 +472,64 @@ async def support_solved(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
     await state.clear()
     await callback_notice(callback, "سعداء بحل المشكلة ✅")
+
+
+@router.callback_query(F.data.startswith("support:aiunresolved:"))
+async def support_ai_unresolved(
+    callback: CallbackQuery,
+    session: AsyncSession,
+    services: Services,
+) -> None:
+    await callback.answer()
+    if not callback.from_user or not callback.message:
+        return
+    try:
+        job_id = int((callback.data or "").rsplit(":", 1)[1])
+    except (TypeError, ValueError):
+        await callback_notice(callback, "طلب الدعم غير صالح", show_alert=True)
+        return
+    job = await session.get(DistributedJob, job_id)
+    payload = dict(job.payload_json or {}) if job else {}
+    if (
+        job is None
+        or job.queue_name != services.support.AI_QUEUE
+        or job.job_type != services.support.AI_JOB_TYPE
+        or int(payload.get("telegram_id", 0) or 0) != callback.from_user.id
+    ):
+        await callback_notice(callback, "طلب الدعم غير موجود", show_alert=True)
+        return
+    user = await services.users.get(session, callback.from_user.id)
+    if user is None:
+        await callback_notice(callback, "الحساب غير موجود", show_alert=True)
+        return
+    order_id = int(payload.get("order_id", 0) or 0)
+    order = None
+    if order_id:
+        try:
+            _actor, owned_order = await services.authorization.require_owned_order(
+                session, callback.from_user.id, order_id
+            )
+        except (AuthorizationError, ResourceNotFoundError):
+            await callback_notice(callback, "الطلب غير موجود", show_alert=True)
+            return
+        order = await services.orders.get(session, owned_order.id)
+    result = dict(job.result_json or {})
+    ticket = await services.support.create_ticket(
+        session,
+        user,
+        subject="طلب مساعدة بعد رد المساعد الذكي",
+        message=str(payload.get("question") or "المشكلة لم تُحل")[:4000],
+        category="order" if order else "general",
+        provider_id=order.provider_id if order else None,
+        order_id=order.id if order else None,
+        ai_answer=str(result.get("answer") or "")[:4000] or None,
+    )
+    await _notify_ticket(session, services, ticket)
+    await edit_or_send(
+        callback.message,
+        f"تم إنشاء التذكرة <code>{ticket.public_id}</code> ✅\n"
+        "سيتم التواصل معك داخل البوت دون كشف معرفات الأطراف.",
+    )
 
 
 @router.callback_query(F.data.startswith("support:unresolved:"))

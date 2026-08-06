@@ -1482,6 +1482,30 @@ async def _v11_7_2_render_schema_repair(session: AsyncSession) -> None:
     await session.flush()
 
 
+async def _v11_7_4_durable_ai_support(session: AsyncSession) -> None:
+    """Register the durable, privacy-bounded AI support runtime.
+
+    The durable queue table already exists from the enterprise foundation, so
+    this release is schema-neutral. It only records operational capabilities
+    and never overwrites an administrator's feature toggle or user data.
+    """
+
+    defaults = {
+        "operations.release_version": "11.7.4-durable-ai-support",
+        "operations.ai_support_queue": "postgres-durable",
+        "operations.ai_support_prompt_isolation": "system-instruction-plus-trusted-context",
+        "operations.ai_support_privacy": "minimum-context-with-explicit-consent",
+        "operations.ai_support_resilience": "retry-circuit-breaker-human-escalation",
+    }
+    for key, value in defaults.items():
+        row = await session.scalar(select(SystemSetting).where(SystemSetting.key == key))
+        if row:
+            row.value = value
+        else:
+            session.add(SystemSetting(key=key, value=value, is_secret=False))
+    await session.flush()
+
+
 MIGRATIONS: tuple[Migration, ...] = (
     Migration(
         version="3.2.0-ui-manager",
@@ -1723,6 +1747,14 @@ MIGRATIONS: tuple[Migration, ...] = (
             "deleting or rewriting existing rows"
         ),
         apply=_v11_7_2_render_schema_repair,
+    ),
+    Migration(
+        version="11.7.4-durable-ai-support",
+        description=(
+            "Add durable PostgreSQL-backed Gemini support jobs, minimum-context privacy, "
+            "bounded concurrency, retries, circuit breaking, and human escalation"
+        ),
+        apply=_v11_7_4_durable_ai_support,
     ),
 
 )

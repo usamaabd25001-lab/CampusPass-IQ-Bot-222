@@ -216,7 +216,7 @@ class Settings(BaseSettings):
     deployment_gate_wait_seconds: int = Field(default=90, alias="DEPLOYMENT_GATE_WAIT_SECONDS")
     ai_concurrency_limit: int = Field(default=5, alias="AI_CONCURRENCY_LIMIT")
     imap_concurrency_limit: int = Field(default=8, alias="IMAP_CONCURRENCY_LIMIT")
-    report_concurrency_limit: int = Field(default=4, alias="REPORT_CONCURRENCY_LIMIT")
+    report_concurrency_limit: int = Field(default=1, alias="REPORT_CONCURRENCY_LIMIT")
     long_operation_concurrency_limit: int = Field(
         default=12, alias="LONG_OPERATION_CONCURRENCY_LIMIT"
     )
@@ -314,13 +314,27 @@ class Settings(BaseSettings):
     feature_gemini: bool = Field(default=True, alias="FEATURE_GEMINI")
     gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
     gemini_model: str = Field(default="gemini-3.6-flash", alias="GEMINI_MODEL")
-    gemini_system_prompt: str = Field(
-        default=(
-            "أنت مساعد دعم لمنصة اشتراكات طلابية. أجب باختصار ولا تطلب كلمات مرور "
-            "أو رموز تحقق أو بيانات بطاقة، ولا تؤكد دفعًا أو استرجاعًا."
-        ),
-        alias="GEMINI_SYSTEM_PROMPT",
+    gemini_system_prompt: str = Field(default="", alias="GEMINI_SYSTEM_PROMPT")
+    gemini_timeout_seconds: int = Field(default=45, alias="GEMINI_TIMEOUT_SECONDS")
+    gemini_retry_attempts: int = Field(default=3, alias="GEMINI_RETRY_ATTEMPTS")
+    gemini_max_output_tokens: int = Field(default=700, alias="GEMINI_MAX_OUTPUT_TOKENS")
+    gemini_max_question_chars: int = Field(default=2000, alias="GEMINI_MAX_QUESTION_CHARS")
+    gemini_max_context_chars: int = Field(default=6000, alias="GEMINI_MAX_CONTEXT_CHARS")
+    gemini_max_answer_chars: int = Field(default=3500, alias="GEMINI_MAX_ANSWER_CHARS")
+    gemini_daily_user_limit: int = Field(default=20, alias="GEMINI_DAILY_USER_LIMIT")
+    gemini_max_pending_per_user: int = Field(default=2, alias="GEMINI_MAX_PENDING_PER_USER")
+    gemini_worker_poll_seconds: float = Field(default=1.0, alias="GEMINI_WORKER_POLL_SECONDS")
+    gemini_job_max_attempts: int = Field(default=3, alias="GEMINI_JOB_MAX_ATTEMPTS")
+    gemini_job_retention_days: int = Field(default=14, alias="GEMINI_JOB_RETENTION_DAYS")
+    gemini_temperature: float = Field(default=0.2, alias="GEMINI_TEMPERATURE")
+    gemini_circuit_failure_threshold: int = Field(
+        default=5, alias="GEMINI_CIRCUIT_FAILURE_THRESHOLD"
     )
+    gemini_circuit_reset_seconds: int = Field(
+        default=60, alias="GEMINI_CIRCUIT_RESET_SECONDS"
+    )
+    gemini_cache_ttl_seconds: int = Field(default=300, alias="GEMINI_CACHE_TTL_SECONDS")
+    gemini_cache_max_entries: int = Field(default=200, alias="GEMINI_CACHE_MAX_ENTRIES")
 
     feature_email_codes: bool = Field(default=False, alias="FEATURE_EMAIL_CODES")
     email_poll_seconds: int = Field(default=20, alias="EMAIL_POLL_SECONDS")
@@ -364,6 +378,8 @@ class Settings(BaseSettings):
         default="provider_direct_prepaid_commission", alias="MONEY_FLOW_MODEL"
     )
     feature_colored_buttons: bool = Field(default=True, alias="FEATURE_COLORED_BUTTONS")
+    feature_central_button_styles: bool = Field(default=True, alias="FEATURE_CENTRAL_BUTTON_STYLES")
+    button_style_overrides_json: str = Field(default="", alias="BUTTON_STYLE_OVERRIDES_JSON")
     maintenance_mode: bool = Field(default=False, alias="MAINTENANCE_MODE")
 
     plugin_modules: Annotated[tuple[str, ...], NoDecode] = Field(default=(), alias="PLUGIN_MODULES")
@@ -745,6 +761,38 @@ class Settings(BaseSettings):
         ):
             if not (1 <= value <= maximum):
                 raise ValueError(f"{name} must be between 1 and {maximum}")
+        if not (5 <= self.gemini_timeout_seconds <= 180):
+            raise ValueError("GEMINI_TIMEOUT_SECONDS must be between 5 and 180")
+        if not (1 <= self.gemini_retry_attempts <= 5):
+            raise ValueError("GEMINI_RETRY_ATTEMPTS must be between 1 and 5")
+        if not (64 <= self.gemini_max_output_tokens <= 4096):
+            raise ValueError("GEMINI_MAX_OUTPUT_TOKENS must be between 64 and 4096")
+        if not (100 <= self.gemini_max_question_chars <= 8000):
+            raise ValueError("GEMINI_MAX_QUESTION_CHARS must be between 100 and 8000")
+        if not (500 <= self.gemini_max_context_chars <= 30000):
+            raise ValueError("GEMINI_MAX_CONTEXT_CHARS must be between 500 and 30000")
+        if not (500 <= self.gemini_max_answer_chars <= 10000):
+            raise ValueError("GEMINI_MAX_ANSWER_CHARS must be between 500 and 10000")
+        if not (1 <= self.gemini_daily_user_limit <= 500):
+            raise ValueError("GEMINI_DAILY_USER_LIMIT must be between 1 and 500")
+        if not (1 <= self.gemini_max_pending_per_user <= 20):
+            raise ValueError("GEMINI_MAX_PENDING_PER_USER must be between 1 and 20")
+        if not (0.25 <= self.gemini_worker_poll_seconds <= 60):
+            raise ValueError("GEMINI_WORKER_POLL_SECONDS must be between 0.25 and 60")
+        if not (1 <= self.gemini_job_max_attempts <= 10):
+            raise ValueError("GEMINI_JOB_MAX_ATTEMPTS must be between 1 and 10")
+        if not (1 <= self.gemini_job_retention_days <= 90):
+            raise ValueError("GEMINI_JOB_RETENTION_DAYS must be between 1 and 90")
+        if not (0.0 <= self.gemini_temperature <= 1.0):
+            raise ValueError("GEMINI_TEMPERATURE must be between 0 and 1")
+        if not (1 <= self.gemini_circuit_failure_threshold <= 50):
+            raise ValueError("GEMINI_CIRCUIT_FAILURE_THRESHOLD must be between 1 and 50")
+        if not (10 <= self.gemini_circuit_reset_seconds <= 3600):
+            raise ValueError("GEMINI_CIRCUIT_RESET_SECONDS must be between 10 and 3600")
+        if not (0 <= self.gemini_cache_ttl_seconds <= 86400):
+            raise ValueError("GEMINI_CACHE_TTL_SECONDS must be between 0 and 86400")
+        if not (1 <= self.gemini_cache_max_entries <= 5000):
+            raise ValueError("GEMINI_CACHE_MAX_ENTRIES must be between 1 and 5000")
         if not (100 <= self.slow_update_warning_ms <= 60_000):
             raise ValueError("SLOW_UPDATE_WARNING_MS must be between 100 and 60000")
         if not (1.0 <= self.banned_user_cache_ttl_seconds <= 3600.0):

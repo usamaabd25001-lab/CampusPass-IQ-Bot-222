@@ -52,6 +52,7 @@ from app.plugins.loader import load_plugins
 from app.services.container import Services
 from app.services.telegram_updates import TelegramUpdateRuntime
 from app.services.platform_access import refresh_authorized_platforms
+from app.tasks.ai_support_worker import AISupportWorker
 from app.tasks.scheduler import Scheduler
 
 logger = logging.getLogger(__name__)
@@ -166,6 +167,7 @@ async def main() -> None:
     event_isolation = SimpleEventIsolation()
     dp: Dispatcher | None = None
     scheduler: Scheduler | None = None
+    ai_support_worker: AISupportWorker | None = None
     polling_lease: RuntimeLeaseGuard | None = None
     update_runtime: TelegramUpdateRuntime | None = None
     update_compatibility_checks: dict | None = None
@@ -358,7 +360,9 @@ async def main() -> None:
 
         if worker_mode:
             scheduler = Scheduler(context)
+            ai_support_worker = AISupportWorker(context)
             await scheduler.start()
+            await ai_support_worker.start()
             context.worker_ready = True
 
         async with database.session_factory() as session:
@@ -435,6 +439,8 @@ async def main() -> None:
         context.deployment_gate_ready = False
         if update_runtime is not None:
             await update_runtime.stop()
+        if ai_support_worker is not None:
+            await ai_support_worker.stop()
         if scheduler is not None:
             await scheduler.stop()
         if polling_lease is not None:
@@ -460,6 +466,7 @@ async def main() -> None:
                 settings.admin_ids,
                 "⚠️ Bot is shutting down/restarting.",
             )
+        await services.gemini.close()
         await bot.session.close()
         await database.close()
         api_task.cancel()

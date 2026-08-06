@@ -127,7 +127,9 @@ class Services:
             self.announcements, self.templates, self.notifications
         )
         self.gemini = GeminiClient(settings)
-        self.support = SupportService(self.gemini, self.data_protection)
+        self.support = SupportService(
+            settings, self.gemini, self.data_protection, self.enterprise_scale
+        )
         self.payments = PaymentService(
             settings, self.orders, self.wallets, self.friend_packages
         )
