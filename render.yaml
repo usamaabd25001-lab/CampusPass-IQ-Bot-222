@@ -1,33 +1,24 @@
 # ============================================================
 # CampusPass IQ V11.7.4
 # Render Free Tier - Frankfurt, Germany
-# Optimized for Telegram + PostgreSQL/Supabase + Gemini
+# One web service: Telegram webhook + scheduled tasks
 # ============================================================
 
 services:
   - type: web
-    name: campuspass-iq-free
-
-    # Germany - Frankfurt
+    name: campuspass-iq-frankfurt
     region: frankfurt
-
     runtime: docker
     plan: free
 
     dockerfilePath: ./Dockerfile
-
-    # Health monitoring
     healthCheckPath: /health/live
-
-    # Deploy automatically after every commit
     autoDeployTrigger: commit
 
     envVars:
-
       # ========================================================
       # CORE
       # ========================================================
-
       - key: ENVIRONMENT
         value: production
 
@@ -40,11 +31,9 @@ services:
       - key: LOG_LEVEL
         value: INFO
 
-
       # ========================================================
       # TELEGRAM
       # ========================================================
-
       - key: TELEGRAM_DELIVERY_MODE
         value: webhook
 
@@ -60,11 +49,9 @@ services:
       - key: ADMIN_IDS
         sync: false
 
-
       # ========================================================
-      # SECURITY / APPLICATION SECRETS
+      # SECURITY
       # ========================================================
-
       - key: ENCRYPTION_KEY
         sync: false
 
@@ -74,11 +61,9 @@ services:
       - key: METRICS_TOKEN
         sync: false
 
-
       # ========================================================
       # DATABASE
       # ========================================================
-
       - key: DATABASE_URL
         sync: false
 
@@ -88,8 +73,6 @@ services:
       - key: DB_SSL_MODE
         value: require
 
-      # Balanced for Render Free 512 MB / 0.1 CPU.
-      # Bigger is NOT automatically faster on the free instance.
       - key: DB_POOL_SIZE
         value: "8"
 
@@ -102,17 +85,12 @@ services:
       - key: DB_POOL_RECYCLE_SECONDS
         value: "600"
 
-      # Good choice when using pooled PostgreSQL / Supabase pooler
       - key: DB_PREPARED_STATEMENT_CACHE_SIZE
         value: "0"
-
 
       # ========================================================
       # REDIS / CACHE
       # ========================================================
-
-      # Redis remains optional.
-      # Application can use in-memory FSM/cache fallback.
       - key: REQUIRE_REDIS_IN_PRODUCTION
         value: "false"
 
@@ -122,11 +100,9 @@ services:
       - key: REQUIRE_FRESH_WORKER_HEARTBEAT
         value: "false"
 
-
       # ========================================================
       # TELEGRAM PERFORMANCE
       # ========================================================
-
       - key: TELEGRAM_WEBHOOK_MAX_CONNECTIONS
         value: "20"
 
@@ -139,15 +115,12 @@ services:
       - key: TELEGRAM_HTTP_CONNECTION_LIMIT
         value: "16"
 
-      # Enough parallelism without overwhelming Render Free CPU
       - key: BOT_UPDATE_CONCURRENCY
         value: "12"
 
-
       # ========================================================
-      # UVICORN PERFORMANCE
+      # UVICORN
       # ========================================================
-
       - key: UVICORN_LIMIT_CONCURRENCY
         value: "50"
 
@@ -157,11 +130,9 @@ services:
       - key: UVICORN_TIMEOUT_KEEP_ALIVE
         value: "5"
 
-
       # ========================================================
-      # GEMINI AI
+      # GEMINI
       # ========================================================
-
       - key: FEATURE_GEMINI
         value: "true"
 
@@ -201,16 +172,12 @@ services:
       - key: GEMINI_CACHE_MAX_ENTRIES
         value: "200"
 
-      # Gemini calls are expensive relative to Render Free CPU.
-      # Two simultaneous jobs is a safer balance.
       - key: AI_CONCURRENCY_LIMIT
         value: "2"
 
-
       # ========================================================
-      # PAYMENT / MONEY FLOW
+      # MONEY / PAYMENT FEATURES
       # ========================================================
-
       - key: FEATURE_MASTERCARD
         value: "false"
 
@@ -220,11 +187,9 @@ services:
       - key: MONEY_FLOW_MODEL
         value: provider_direct_prepaid_commission
 
-
       # ========================================================
       # BACKUPS
       # ========================================================
-
       - key: BACKUP_ENABLED
         value: "false"
 
@@ -237,11 +202,9 @@ services:
       - key: REQUIRE_PRE_DEPLOY_BACKUP
         value: "false"
 
-
       # ========================================================
       # IMAGE MODERATION
       # ========================================================
-
       - key: IMAGE_MODERATION_ENABLED
         value: "true"
 
@@ -251,30 +214,24 @@ services:
       - key: IMAGE_MODERATION_FAIL_CLOSED
         value: "false"
 
-
       # ========================================================
       # EVIDENCE STORAGE
       # ========================================================
-
       - key: EVIDENCE_EXTERNAL_STORAGE_ENABLED
         value: "false"
 
       - key: REQUIRE_EXTERNAL_EVIDENCE_STORAGE_IN_PRODUCTION
         value: "false"
 
-
       # ========================================================
       # FEATURES
       # ========================================================
-
       - key: FEATURE_DISPUTES
         value: "false"
-
 
       # ========================================================
       # BRAND
       # ========================================================
-
       - key: BRAND_PRIMARY_COLOR
         value: "#003279"
 
