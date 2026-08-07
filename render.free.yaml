@@ -4,6 +4,7 @@
 services:
   - type: web
     name: campuspass-iq-free
+    region: fra # 📍 إجبار الاستضافة في ألمانيا (Frankfurt) لتصفير المسافة مع قاعدة البيانات
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
@@ -47,11 +48,11 @@ services:
       - key: DB_SSL_MODE
         value: require
       - key: DB_POOL_SIZE
-        value: "3"
+        value: "15" # 🚀 توسيع المسارات لمنع تعليق الأزرار
       - key: DB_MAX_OVERFLOW
-        value: "2"
+        value: "10" # 🚀 زيادة قدرة الاستيعاب وقت الذروة
       - key: DB_POOL_TIMEOUT_SECONDS
-        value: "15"
+        value: "30" # 🚀 تمديد وقت الانتظار
       - key: DB_POOL_RECYCLE_SECONDS
         value: "600"
       - key: DB_PREPARED_STATEMENT_CACHE_SIZE
