@@ -18,6 +18,11 @@ from aiogram.types import (
     ReplyKeyboardRemove,
 )
 
+from app.bot.button_styles import (
+    apply_button_style_policy,
+    clear_button_style_policy_cache,
+    get_button_style_policy,
+)
 from app.bot.keyboards.inline import validate_callback_markup, with_navigation
 
 logger = logging.getLogger(__name__)

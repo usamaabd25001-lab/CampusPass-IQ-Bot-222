@@ -8,7 +8,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from app.bot.callbacks import CallbackPayloadError, MAX_CALLBACK_BYTES, callback_size
 from app.domain.student_commerce import format_offer_button
-from app.bot.ui.button_styles import apply_button_style_policy
+from app.bot.button_styles import apply_button_style_policy
 
 
 def validate_callback_markup(markup: InlineKeyboardMarkup | None) -> InlineKeyboardMarkup | None:

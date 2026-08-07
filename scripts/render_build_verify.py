@@ -335,6 +335,13 @@ def main() -> None:
     )
     check(
         (
+            "python -m scripts.validate_import_architecture" in dockerfile
+            or "python scripts/validate_import_architecture.py" in dockerfile
+        ),
+        "Dockerfile is not running the import architecture gate",
+    )
+    check(
+        (
             "python -m scripts.validate_ui_public_api" in dockerfile
             or "python scripts/validate_ui_public_api.py" in dockerfile
         ),

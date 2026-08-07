@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from app.bot.ui.button_styles import (
+from app.bot.button_styles import (
     apply_button_style_policy,
     clear_button_style_policy_cache,
 )

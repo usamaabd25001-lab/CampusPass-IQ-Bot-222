@@ -30,6 +30,7 @@ COPY . /app
 RUN python -m compileall -q app scripts ops alembic \
     && python -c "import app, scripts; print('Project package import validation passed')" \
     && python -m scripts.validate_ai_support_integration \
+    && python -m scripts.validate_import_architecture \
     && python -m scripts.validate_ui_public_api \
     && python -m scripts.render_build_verify \
     && rm -rf /app/.pytest_cache /app/.v9_original /app/.v10_before \
