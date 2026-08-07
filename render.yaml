@@ -22,9 +22,6 @@ services:
     # Deploy automatically after every commit
     autoDeployTrigger: commit
 
-    # Allow active requests/jobs a little time to finish on shutdown
-    maxShutdownDelaySeconds: 60
-
     envVars:
 
       # ========================================================
