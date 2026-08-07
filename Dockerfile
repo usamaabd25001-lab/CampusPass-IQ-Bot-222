@@ -29,6 +29,7 @@ COPY . /app
 # release identifiers literally and can reject a valid newer release.
 RUN python -m compileall -q app scripts ops alembic \
     && python scripts/validate_ai_support_integration.py \
+    && python scripts/validate_ui_public_api.py \
     && python scripts/render_build_verify.py \
     && rm -rf /app/.pytest_cache /app/.v9_original /app/.v10_before \
     && find /app -type d -name '__pycache__' -prune -exec rm -rf {} + \
