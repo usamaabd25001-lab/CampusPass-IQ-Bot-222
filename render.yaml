@@ -1,10 +1,7 @@
 # CampusPass IQ V11.7.4 - Render Free Tier
-# One free web service runs both Telegram webhook handling and scheduled worker tasks.
-# No paid background worker, no paid pre-deploy command, and Redis is optional.
 services:
   - type: web
     name: campuspass-iq-free
-    region: fra # 📍 إجبار الاستضافة في ألمانيا (Frankfurt) لتصفير المسافة مع قاعدة البيانات
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
@@ -48,11 +45,11 @@ services:
       - key: DB_SSL_MODE
         value: require
       - key: DB_POOL_SIZE
-        value: "15" # 🚀 توسيع المسارات لمنع اختناق الأزرار
+        value: "15" 
       - key: DB_MAX_OVERFLOW
-        value: "10" # 🚀 زيادة قدرة الاستيعاب وقت الضغط
+        value: "10" 
       - key: DB_POOL_TIMEOUT_SECONDS
-        value: "30" # 🚀 تمديد وقت الانتظار
+        value: "30" 
       - key: DB_POOL_RECYCLE_SECONDS
         value: "600"
       - key: DB_PREPARED_STATEMENT_CACHE_SIZE
