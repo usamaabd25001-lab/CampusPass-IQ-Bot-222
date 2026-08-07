@@ -28,9 +28,10 @@ COPY . /app
 # scripts/ for audit, but are not executed here because several pin older
 # release identifiers literally and can reject a valid newer release.
 RUN python -m compileall -q app scripts ops alembic \
-    && python scripts/validate_ai_support_integration.py \
-    && python scripts/validate_ui_public_api.py \
-    && python scripts/render_build_verify.py \
+    && python -c "import app, scripts; print('Project package import validation passed')" \
+    && python -m scripts.validate_ai_support_integration \
+    && python -m scripts.validate_ui_public_api \
+    && python -m scripts.render_build_verify \
     && rm -rf /app/.pytest_cache /app/.v9_original /app/.v10_before \
     && find /app -type d -name '__pycache__' -prune -exec rm -rf {} + \
     && chown -R bot:bot /app

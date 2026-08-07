@@ -320,12 +320,25 @@ def main() -> None:
 
     dockerfile = read("Dockerfile")
     check(
-        "python scripts/render_build_verify.py" in dockerfile,
+        (
+            "python -m scripts.render_build_verify" in dockerfile
+            or "python scripts/render_build_verify.py" in dockerfile
+        ),
         "Dockerfile is not using the current Render build verifier",
     )
     check(
-        "python scripts/validate_ai_support_integration.py" in dockerfile,
+        (
+            "python -m scripts.validate_ai_support_integration" in dockerfile
+            or "python scripts/validate_ai_support_integration.py" in dockerfile
+        ),
         "Dockerfile is not running the offline AI integration validation",
+    )
+    check(
+        (
+            "python -m scripts.validate_ui_public_api" in dockerfile
+            or "python scripts/validate_ui_public_api.py" in dockerfile
+        ),
+        "Dockerfile is not validating the stable app.bot.ui public API",
     )
     check(
         "python scripts/verify_v10_railway_turbo.py" not in dockerfile,
