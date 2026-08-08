@@ -317,14 +317,16 @@ def verify_runtime_imports() -> dict[str, object]:
             regular_price_iqd=10000,
             promotion_price_iqd=None,
             promotion_end=None,
-            delivery_type="manual",
-            activation_mode="manual",
+            fulfillment_kind="manual",
+            account_type="not_applicable",
             validity_type="days_from_activation",
             validity_value=30,
             fixed_end=None,
             start_trigger="payment_approved",
             daily_limit=None,
+            warranty_enabled=False,
             terms="",
+            guide_text="افتح الخدمة واتبع تعليمات التفعيل المرسلة من المنصة.",
         )
     except Exception as exc:
         fail(f"WebApp Pydantic contract failed: {type(exc).__name__}: {exc}")

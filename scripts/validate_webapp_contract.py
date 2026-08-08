@@ -69,6 +69,70 @@ def validate_templates() -> None:
     require(offer, "هل تقصد", where="Iraqi smart-price confirmation")
 
 
+
+def _pydantic_model_fields(module_source: str, class_name: str) -> tuple[set[str], set[str]]:
+    """Return (all_fields, syntactically_required_fields) for a BaseModel class.
+
+    This is intentionally AST-only so the build gate can detect API/verifier drift
+    before importing FastAPI/aiogram. A Field(...) declaration without an explicit
+    default is treated as required.
+    """
+    tree = ast.parse(module_source)
+    for node in tree.body:
+        if not isinstance(node, ast.ClassDef) or node.name != class_name:
+            continue
+        all_fields: set[str] = set()
+        required: set[str] = set()
+        for item in node.body:
+            if not isinstance(item, ast.AnnAssign) or not isinstance(item.target, ast.Name):
+                continue
+            name = item.target.id
+            all_fields.add(name)
+            value = item.value
+            if value is None:
+                required.add(name)
+                continue
+            if isinstance(value, ast.Call) and isinstance(value.func, ast.Name) and value.func.id == "Field":
+                has_default_keyword = any(k.arg in {"default", "default_factory"} for k in value.keywords)
+                has_positional_default = bool(value.args)
+                if not has_default_keyword and not has_positional_default:
+                    required.add(name)
+        return all_fields, required
+    fail(f"FastAPI server is missing model {class_name!r}")
+    raise AssertionError
+
+
+def _call_keyword_names(module_source: str, call_name: str) -> set[str]:
+    tree = ast.parse(module_source)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == call_name:
+            return {kw.arg for kw in node.keywords if kw.arg is not None}
+    fail(f"render verifier is missing {call_name}(...) contract sample")
+    raise AssertionError
+
+
+def validate_runtime_contract_samples() -> None:
+    """Keep Render runtime samples synchronized with the live Pydantic models.
+
+    This catches exactly the class of regression where the API model gains/renames a
+    required field but render_build_verify.py still constructs the old request shape.
+    """
+    server = text("app/api/server.py")
+    verifier = text("scripts/render_build_verify.py")
+    all_fields, required = _pydantic_model_fields(server, "OfferCreateRequest")
+    supplied = _call_keyword_names(verifier, "OfferCreateRequest")
+
+    # warranty_enabled is semantically required by the model_validator even though
+    # its transport type is Optional so the UI can represent "not answered yet".
+    semantic_required = {"warranty_enabled"}
+    missing = sorted((required | semantic_required) - supplied)
+    unknown = sorted(supplied - all_fields)
+    if missing:
+        fail(f"render OfferCreateRequest sample is missing required fields: {', '.join(missing)}")
+    if unknown:
+        fail(f"render OfferCreateRequest sample contains stale/unknown fields: {', '.join(unknown)}")
+
+
 def validate_server_contract() -> None:
     source = text("app/api/server.py")
     for route in (
@@ -170,6 +234,7 @@ def main() -> None:
     validate_python_syntax()
     validate_templates()
     validate_server_contract()
+    validate_runtime_contract_samples()
     validate_business_services()
     validate_bot_entry_buttons()
     print("WebApp architecture contract validation passed")
