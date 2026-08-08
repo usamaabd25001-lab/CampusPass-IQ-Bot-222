@@ -8,3 +8,32 @@ CampusPass-IQ-Bot-*.zip
 
 CampusPass_Full_Code.txt
 *_Full_Code.txt
+
+# R4.2 production-image hygiene: keep source history in the repository/ZIP,
+# but do not copy non-runtime or legacy validation material into Render images.
+docs/
+examples/
+tests/
+tests_legacy/
+loadtests/
+windows_tools/
+verify_phase7a.py
+requirements-backup.txt
+PROJECT_TREE.txt
+V*_FILE_MANIFEST*.txt
+V*_FILE_MANIFEST*.json
+V*_VERIFICATION_REPORT*.json
+scripts/validate_v10_*.py
+scripts/validate_v11_*.py
+scripts/validate_final_ui_authorization_patch.py
+scripts/verify_phase*.py
+scripts/verify_project.py
+scripts/verify_v10_*.py
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+*.log
+*.bat

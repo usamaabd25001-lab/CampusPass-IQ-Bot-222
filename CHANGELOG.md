@@ -1,3 +1,12 @@
+## 11.8.2-provider-commerce-webapp-release-hygiene — 2026-08-08
+
+- Fixed release metadata drift and decoupled code-only patch releases from database schema migrations.
+- Added release-hygiene, imported-symbol, Render Free profile, and duplicate-env-key build gates.
+- Corrected the Render Blueprint Frankfurt region identifier and unified conservative free-tier limits.
+- Quarantined historical tests/validators from the runtime image while preserving them in the source archive.
+- Added a deterministic deploy-bundle builder with SHA-256 manifest.
+
+
 ## 11.7.4-durable-ai-support — 2026-08-06
 
 - Added a PostgreSQL-backed durable queue for Gemini support requests in Render Free combined mode.

@@ -51,6 +51,70 @@ def imports_for(path: Path) -> list[tuple[int, str]]:
     return found
 
 
+def _module_path(module: str) -> Path | None:
+    candidate = ROOT.joinpath(*module.split("."))
+    py_file = candidate.with_suffix(".py")
+    if py_file.is_file():
+        return py_file
+    init_file = candidate / "__init__.py"
+    return init_file if init_file.is_file() else None
+
+
+def _top_level_symbols(path: Path) -> set[str]:
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    names: set[str] = set()
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            names.add(node.name)
+        elif isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    names.add(target.id)
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            names.add(node.target.id)
+        elif isinstance(node, ast.Import):
+            for alias in node.names:
+                names.add(alias.asname or alias.name.split(".", 1)[0])
+        elif isinstance(node, ast.ImportFrom):
+            for alias in node.names:
+                if alias.name != "*":
+                    names.add(alias.asname or alias.name)
+    return names
+
+
+def check_internal_imported_symbols() -> int:
+    """Catch ``from app.x import MissingName`` without importing third parties."""
+    cache: dict[Path, set[str]] = {}
+    missing: list[str] = []
+    checked = 0
+    for source_path in APP.rglob("*.py"):
+        tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
+        for node in ast.walk(tree):
+            if not (
+                isinstance(node, ast.ImportFrom)
+                and node.level == 0
+                and node.module
+                and node.module.startswith("app")
+            ):
+                continue
+            target = _module_path(node.module)
+            if target is None:
+                continue  # render_build_verify has the module-path gate.
+            symbols = cache.setdefault(target, _top_level_symbols(target))
+            for alias in node.names:
+                if alias.name == "*":
+                    continue
+                checked += 1
+                if alias.name not in symbols:
+                    missing.append(
+                        f"{source_path.relative_to(ROOT)}:{node.lineno} -> "
+                        f"{node.module}.{alias.name}"
+                    )
+    if missing:
+        fail("missing internal imported symbols: " + "; ".join(missing[:30]))
+    return checked
+
+
 def check_keyboard_layering() -> int:
     violations: list[str] = []
     checked = 0
@@ -99,11 +163,13 @@ def check_expected_shape() -> None:
 def main() -> None:
     check_expected_shape()
     collision_files = check_module_package_collisions()
+    imported_symbols = check_internal_imported_symbols()
     keyboard_files = check_keyboard_layering()
     check_button_style_independence()
     print(
         "Import architecture validation passed "
-        f"({collision_files} modules checked, {keyboard_files} keyboard modules checked)"
+        f"({collision_files} modules checked, {imported_symbols} imported symbols checked, "
+        f"{keyboard_files} keyboard modules checked)"
     )
 
 

@@ -24,10 +24,11 @@ RUN python -m pip install --upgrade pip \
 
 COPY . /app
 
-# One release-aware production gate. Historical validators remain available in
-# scripts/ for audit, but are not executed here because several pin older
-# release identifiers literally and can reject a valid newer release.
-RUN python -m compileall -q app scripts ops alembic \
+# One release-aware production gate. Historical validators/tests stay in the
+# source archive for audit, but .dockerignore quarantines them from the runtime
+# image so obsolete release assumptions cannot affect a current Render build.
+RUN python -m scripts.validate_release_hygiene \
+    && python -m compileall -q app scripts ops alembic \
     && python -c "import app, scripts; print('Project package import validation passed')" \
     && python -m scripts.validate_ai_support_integration \
     && python -m scripts.validate_import_architecture \

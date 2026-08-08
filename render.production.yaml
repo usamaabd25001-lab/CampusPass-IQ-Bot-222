@@ -1,4 +1,4 @@
-# V11.7 production blueprint. Both services use the same GitHub repository.
+# V11.8 production blueprint. Both services use the same GitHub repository.
 services:
   - type: web
     name: campuspass-v11-7-web

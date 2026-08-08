@@ -1,5 +1,5 @@
 # ============================================================
-# CampusPass IQ V11.7.4
+# CampusPass IQ V11.8.2
 # Render Free Tier - Frankfurt, Germany
 # One web service: Telegram webhook + scheduled tasks
 # ============================================================
@@ -74,10 +74,10 @@ services:
         value: require
 
       - key: DB_POOL_SIZE
-        value: "8"
+        value: "3"
 
       - key: DB_MAX_OVERFLOW
-        value: "4"
+        value: "2"
 
       - key: DB_POOL_TIMEOUT_SECONDS
         value: "30"
@@ -116,7 +116,7 @@ services:
         value: "16"
 
       - key: BOT_UPDATE_CONCURRENCY
-        value: "12"
+        value: "8"
 
       # ========================================================
       # UVICORN
@@ -173,6 +173,10 @@ services:
         value: "200"
 
       - key: AI_CONCURRENCY_LIMIT
+        value: "1"
+      - key: REPORT_CONCURRENCY_LIMIT
+        value: "1"
+      - key: LONG_OPERATION_CONCURRENCY_LIMIT
         value: "2"
 
       # ========================================================

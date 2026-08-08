@@ -1,10 +1,10 @@
-# CampusPass IQ V11.7.4 - Render Free Tier
+# CampusPass IQ V11.8.2 - Render Free Tier
 # One free web service runs both Telegram webhook handling and scheduled worker tasks.
 # No paid background worker, no paid pre-deploy command, and Redis is optional.
 services:
   - type: web
     name: campuspass-iq-free
-    region: fra # 📍 إجبار الاستضافة في ألمانيا (Frankfurt) لتصفير المسافة مع قاعدة البيانات
+    region: frankfurt # Frankfurt, Germany
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
@@ -48,9 +48,9 @@ services:
       - key: DB_SSL_MODE
         value: require
       - key: DB_POOL_SIZE
-        value: "15" # 🚀 توسيع المسارات لمنع تعليق الأزرار
+        value: "3"
       - key: DB_MAX_OVERFLOW
-        value: "10" # 🚀 زيادة قدرة الاستيعاب وقت الذروة
+        value: "2"
       - key: DB_POOL_TIMEOUT_SECONDS
         value: "30" # 🚀 تمديد وقت الانتظار
       - key: DB_POOL_RECYCLE_SECONDS
@@ -66,15 +66,15 @@ services:
       - key: TELEGRAM_UPDATE_CLAIM_BATCH_SIZE
         value: "2"
       - key: TELEGRAM_HTTP_CONNECTION_LIMIT
-        value: "20"
+        value: "16"
       - key: BOT_UPDATE_CONCURRENCY
-        value: "20"
+        value: "8"
       - key: UVICORN_LIMIT_CONCURRENCY
-        value: "100"
+        value: "50"
       - key: UVICORN_BACKLOG
-        value: "256"
+        value: "128"
       - key: UVICORN_TIMEOUT_KEEP_ALIVE
-        value: "10"
+        value: "5"
 
       - key: TIMEZONE
         value: Asia/Baghdad
@@ -105,7 +105,11 @@ services:
       - key: GEMINI_CACHE_MAX_ENTRIES
         value: "200"
       - key: AI_CONCURRENCY_LIMIT
-        value: "3"
+        value: "1"
+      - key: REPORT_CONCURRENCY_LIMIT
+        value: "1"
+      - key: LONG_OPERATION_CONCURRENCY_LIMIT
+        value: "2"
       - key: FEATURE_MASTERCARD
         value: "false"
       - key: FEATURE_PROVIDER_WITHDRAWALS

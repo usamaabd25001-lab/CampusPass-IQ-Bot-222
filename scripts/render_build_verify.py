@@ -11,6 +11,7 @@ build gates because some of them pin old release identifiers literally.
 
 import ast
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -32,6 +33,15 @@ def read(path: str) -> str:
     target = ROOT / path
     check(target.is_file(), f"required file is missing: {path}")
     return target.read_text(encoding="utf-8")
+
+
+def yaml_env_value(document: str, key: str) -> str | None:
+    pattern = re.compile(
+        rf"^\s*-\s+key:\s*{re.escape(key)}\s*$\n\s+value:\s*[\"']?([^\"'\n#]+)",
+        re.MULTILINE,
+    )
+    match = pattern.search(document)
+    return match.group(1).strip() if match else None
 
 
 def verify_python_tree() -> int:
@@ -145,29 +155,48 @@ def verify_render_blueprint() -> dict[str, object]:
         check(marker in production, f"render.production.yaml is missing {marker!r}")
 
     free = read("render.free.yaml")
-    for marker in (
-        "type: web",
-        "plan: free",
-        "dockerfilePath: ./Dockerfile",
-        "healthCheckPath: /health/live",
-        "value: combined",
-        "- key: REQUIRE_REDIS_IN_PRODUCTION",
-        'value: "false"',
-    ):
-        check(marker in free, f"render.free.yaml is missing {marker!r}")
-    check("type: worker" not in free, "free profile must not create a paid background worker")
-    check("preDeployCommand:" not in free, "free profile must not use paid pre-deploy commands")
-    check("REDIS_URL" not in free, "free profile must not require Redis during initial deploy")
-    check('BACKUP_ENABLED\n        value: "true"' not in free, "free profile must not force backup without S3")
-    check('EVIDENCE_EXTERNAL_STORAGE_ENABLED\n        value: "true"' not in free, "free profile must not force external evidence storage")
-    check("- key: GEMINI_API_KEY" in free, "free profile must prompt for GEMINI_API_KEY")
-    check("- key: GEMINI_MAX_PENDING_PER_USER" in free, "free profile must cap pending AI jobs")
-    check("- key: GEMINI_CIRCUIT_FAILURE_THRESHOLD" in free, "free profile must configure the AI circuit breaker")
+    root_free = read("render.yaml")
+    for profile_name, profile in (("render.free.yaml", free), ("render.yaml", root_free)):
+        for marker in (
+            "type: web",
+            "plan: free",
+            "region: frankfurt",
+            "dockerfilePath: ./Dockerfile",
+            "healthCheckPath: /health/live",
+            "value: combined",
+            "- key: REQUIRE_REDIS_IN_PRODUCTION",
+            'value: "false"',
+        ):
+            check(marker in profile, f"{profile_name} is missing {marker!r}")
+        check("type: worker" not in profile, f"{profile_name} must not create a paid background worker")
+        check("preDeployCommand:" not in profile, f"{profile_name} must not use paid pre-deploy commands")
+        check("REDIS_URL" not in profile, f"{profile_name} must not require Redis during initial deploy")
+        check('BACKUP_ENABLED\n        value: "true"' not in profile, f"{profile_name} must not force backup without S3")
+        check('EVIDENCE_EXTERNAL_STORAGE_ENABLED\n        value: "true"' not in profile, f"{profile_name} must not force external evidence storage")
+        check("- key: GEMINI_API_KEY" in profile, f"{profile_name} must prompt for GEMINI_API_KEY")
+        check("- key: GEMINI_MAX_PENDING_PER_USER" in profile, f"{profile_name} must cap pending AI jobs")
+        check("- key: GEMINI_CIRCUIT_FAILURE_THRESHOLD" in profile, f"{profile_name} must configure the AI circuit breaker")
+        expected_free_limits = {
+            "DB_POOL_SIZE": "3",
+            "DB_MAX_OVERFLOW": "2",
+            "TELEGRAM_UPDATE_CONSUMERS": "2",
+            "BOT_UPDATE_CONCURRENCY": "8",
+            "TELEGRAM_HTTP_CONNECTION_LIMIT": "16",
+            "UVICORN_LIMIT_CONCURRENCY": "50",
+            "UVICORN_BACKLOG": "128",
+            "UVICORN_TIMEOUT_KEEP_ALIVE": "5",
+            "AI_CONCURRENCY_LIMIT": "1",
+            "REPORT_CONCURRENCY_LIMIT": "1",
+            "LONG_OPERATION_CONCURRENCY_LIMIT": "2",
+        }
+        for key, wanted in expected_free_limits.items():
+            actual = yaml_env_value(profile, key)
+            check(actual == wanted, f"{profile_name} {key}={actual!r}, expected {wanted!r}")
+        check(
+            profile.count("autoDeployTrigger: commit") == 1,
+            f"{profile_name} must deploy automatically on commits",
+        )
     check(production.count("- key: GEMINI_API_KEY") == 2, "paid split profile needs the Gemini key in web and worker")
-    check(
-        free.count("autoDeployTrigger: commit") == 1,
-        "free web service must deploy automatically on commits",
-    )
     return {
         "paid_profile": "web+worker",
         "free_profile": "single-combined-web",
@@ -247,7 +276,19 @@ def verify_runtime_imports() -> dict[str, object]:
     versions = [item.version for item in MIGRATIONS]
     check(bool(versions), "custom migration registry is empty")
     check(len(versions) == len(set(versions)), "duplicate custom migration versions")
-    check(versions[-1] == __version__, f"migration head {versions[-1]!r} != app {__version__!r}")
+    try:
+        migration_release_tuples = [release_tuple(value) for value in versions]
+        app_release_tuple = release_tuple(__version__)
+    except ValueError as exc:
+        fail(str(exc))
+    check(
+        all(left <= right for left, right in zip(migration_release_tuples, migration_release_tuples[1:])),
+        "custom migration registry is not ordered by release",
+    )
+    check(
+        migration_release_tuples[-1] <= app_release_tuple,
+        f"migration head {versions[-1]!r} is newer than app {__version__!r}",
+    )
 
     try:
         from app.core.config import Settings
@@ -360,6 +401,7 @@ def verify_runtime_imports() -> dict[str, object]:
     return {
         "version": __version__,
         "migration_count": len(versions),
+        "schema_head": versions[-1],
         "router_subrouters": subrouters,
     }
 
@@ -380,6 +422,10 @@ def main() -> None:
             or "python scripts/render_build_verify.py" in dockerfile
         ),
         "Dockerfile is not using the current Render build verifier",
+    )
+    check(
+        "python -m scripts.validate_release_hygiene" in dockerfile,
+        "Dockerfile is not running the release hygiene gate",
     )
     check(
         (
