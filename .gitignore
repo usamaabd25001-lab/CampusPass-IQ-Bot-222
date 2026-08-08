@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+CampusPass_Full_Code.txt
+*_Full_Code.txt
+*.zip
