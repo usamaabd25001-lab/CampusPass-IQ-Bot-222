@@ -1,0 +1,157 @@
+# ================================================================
+# CampusPass IQ Bot V6.1 — External PostgreSQL edition
+# انسخ هذه القيم إلى Railway Variables واستبدل الأمثلة فقط.
+# لا ترفع ملف .env الحقيقي إلى GitHub.
+# ================================================================
+
+# --- إلزامي ---
+BOT_TOKEN=PUT_TELEGRAM_BOT_TOKEN_HERE
+ADMIN_IDS=123456789
+# الصق رابط PostgreSQL الخارجي من Supabase/Neon/مزود آخر.
+# لا تستخدم ${{Postgres.DATABASE_URL}} في هذه النسخة.
+DATABASE_URL=postgresql://USER:PASSWORD@EXTERNAL_HOST:5432/postgres?sslmode=require
+ENVIRONMENT=production
+ENCRYPTION_KEY=PUT_A_STABLE_RANDOM_SECRET_OF_32_CHARS_OR_MORE
+
+# --- اتصال قاعدة البيانات الخارجية ---
+REQUIRE_EXTERNAL_DATABASE=true
+DB_SSL_MODE=require
+# مطلوب فقط عند DB_SSL_MODE=verify-full: شهادة CA بصيغة PEM ثم Base64.
+DB_CA_CERT_B64=
+DB_POOL_SIZE=5
+DB_MAX_OVERFLOW=5
+DB_POOL_TIMEOUT_SECONDS=30
+DB_POOL_RECYCLE_SECONDS=900
+DB_CONNECT_TIMEOUT_SECONDS=15
+DB_STATEMENT_TIMEOUT_MS=30000
+DB_STARTUP_RETRIES=8
+DB_STARTUP_RETRY_SECONDS=5
+DB_APPLICATION_NAME=campuspass-iq
+# اجعله 0 عند استعمال pooler/pgbouncer لتقليل مشاكل prepared statements.
+DB_PREPARED_STATEMENT_CACHE_SIZE=0
+
+# Redis اختياري. البيانات الدائمة تبقى في PostgreSQL، وRedis للحالات المؤقتة فقط.
+REDIS_URL=
+REDIS_FSM_TTL_SECONDS=86400
+
+# --- تشغيل Railway / API ---
+LOG_LEVEL=INFO
+TIMEZONE=Asia/Baghdad
+PORT=8080
+PUBLIC_BASE_URL=
+# Railway يضيفه تلقائياً عند إنشاء Public Domain؛ لا تكتبه يدوياً غالباً.
+RAILWAY_PUBLIC_DOMAIN=
+# اختياري. يفتح نقاط إدارة API المحمية عند وضع سر 32 حرفاً فأكثر.
+API_ADMIN_TOKEN=
+MAINTENANCE_MODE=false
+
+# --- هوية البوت ---
+BOT_NAME=CampusPass IQ Bot
+BOT_NAME_EN=CampusPass IQ Bot
+BOT_SHORT_DESCRIPTION=Student subscriptions and digital services
+BOT_DESCRIPTION=منصة اشتراكات وخدمات طلابية متعددة المزودين
+WELCOME_TEXT=أهلاً بك في CampusPass IQ Bot 👋\nمنصة الاشتراكات والخدمات الطلابية.
+HELP_TEXT=اختر القسم المطلوب من القائمة.
+SUPPORT_TEXT=اختر المشكلة المقترحة أو اكتب سؤالك بالتفصيل.
+TERMS_TEXT=يجب إدخال معلومات صحيحة والالتزام بشروط كل عرض.
+PRIVACY_TEXT=تستخدم البيانات لتنفيذ الطلبات والدعم فقط.
+WELCOME_PHOTO=
+BOT_LOGO_URL=
+EXPORT_LOGO_PATH=app/reports/assets/campuspass-iq-horizontal.png
+BRAND_PRIMARY_COLOR=#0B4AA9
+BRAND_SECONDARY_COLOR=#18C6C4
+BRAND_DARK_COLOR=#102A43
+SUPPORT_USERNAME=
+
+# --- الأسعار والباقات ---
+DEFAULT_SERVICE_FEE_IQD=500
+DEFAULT_MANAGEMENT_PERCENT=5
+DEFAULT_PROVIDER_PLAN=free
+DEFAULT_SUBSCRIPTION_GRACE_DAYS=3
+DEFAULT_TRIAL_DAYS=7
+DEFAULT_TRIAL_PLAN=pro
+SUBSCRIPTION_REMINDER_DAYS=3,1
+DEFAULT_PAYMENT_INSTRUCTIONS=حوّل المبلغ إلى معلومات الدفع الظاهرة ثم ارفع الإثبات.
+
+# --- الحجز والتسليم ---
+PURCHASE_RESERVATION_MINUTES=15
+DELIVERY_RETRY_SECONDS=30
+DELIVERY_MAX_ATTEMPTS=3
+PROCESSING_INDICATOR_DELAY_MS=650
+PROCESSING_MESSAGE_TEXT=⏳ جاري معالجة طلبك، يرجى الانتظار...
+RATE_LIMIT_INTERVAL_MS=300
+SCHEDULER_LOCK_ID=410001
+
+# --- أسرار التقارير ---
+# لا تغيّر ENCRYPTION_KEY بعد حفظ حسابات أو بيانات مشفرة.
+REPORT_SECRET_KEY=
+REPORT_TOKEN_DAYS=2
+REPORT_MAX_ACCESSES=20
+DAILY_REPORT_HOUR=23
+DAILY_REPORT_MINUTE=55
+
+# --- الميزات الأساسية ---
+FEATURE_REPORTS=true
+FEATURE_REFERRALS=true
+FEATURE_COLORED_BUTTONS=true
+
+# --- Gemini اختياري ---
+FEATURE_GEMINI=true
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-3.1-flash-lite
+GEMINI_SYSTEM_PROMPT=أنت مساعد دعم لمنصة اشتراكات طلابية. لا تطلب كلمات مرور أو رموز تحقق أو بيانات بطاقة، ولا تؤكد دفعاً أو استرجاعاً.
+
+# --- جلب رموز البريد اختياري ---
+FEATURE_EMAIL_CODES=false
+EMAIL_POLL_SECONDS=20
+EMAIL_RESERVATION_MINUTES=10
+EMAIL_AMBIGUITY_POLICY=review
+MAX_CODE_ATTEMPTS=3
+
+# --- بوابة Mastercard اختيارية ---
+FEATURE_MASTERCARD=false
+PAYMENT_GATEWAY_CREATE_URL=
+PAYMENT_GATEWAY_STATUS_URL=
+PAYMENT_GATEWAY_API_KEY=
+PAYMENT_GATEWAY_MERCHANT_ID=
+PAYMENT_WEBHOOK_SECRET=
+PAYMENT_SUCCESS_STATUSES=paid,success,successful,approved,captured,completed
+PAYMENT_FAILURE_STATUSES=failed,declined,cancelled,canceled,expired,voided
+PAYMENT_WEBHOOK_MAX_BODY_BYTES=262144
+
+# --- إضافات Python موثوقة فقط، مفصولة بفواصل ---
+PLUGIN_MODULES=
+
+# ================================================================
+# متغيرات أدوات النقل (لا يحتاجها تشغيل البوت اليومي)
+# ================================================================
+SOURCE_DATABASE_URL=
+TARGET_DATABASE_URL=
+MIGRATION_CONFIRM=MIGRATE_CAMPUSPASS_DATABASE
+
+# ================================================================
+# متغيرات النسخة اليومية المشفرة إلى Google Drive/GitHub Actions
+# Google Drive ليس قاعدة البيانات؛ هو مكان حفظ نسخة احتياطية فقط.
+# ================================================================
+BACKUP_DATABASE_URL=
+BACKUP_ENCRYPTION_KEY=
+BACKUP_RETENTION_DAYS=30
+GOOGLE_DRIVE_CLIENT_ID=
+GOOGLE_DRIVE_CLIENT_SECRET=
+GOOGLE_DRIVE_REFRESH_TOKEN=
+GOOGLE_DRIVE_FOLDER_ID=
+GOOGLE_DRIVE_FOLDER_NAME=CampusPass IQ Backups
+
+# الاستعادة — لا تضعها إلا وقت الاختبار أو الاستعادة.
+RESTORE_MODE=verify
+RESTORE_ASSET_NAME=
+RESTORE_DRIVE_FILE_ID=
+RESTORE_DATABASE_URL=
+RESTORE_CONFIRMATION=
+# V10.5 — الإحالات والكوبونات وإثباتات الدفع
+FEATURE_REFERRALS=true
+REFERRAL_REWARD_POINTS=10
+REFERRAL_WALLET_REWARD_IQD=0
+REFERRAL_INVITES_PER_COUPON=3
+PAYMENT_PROOF_MAX_BYTES=15000000
+

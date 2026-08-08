@@ -1,0 +1,10 @@
+.git
+.pytest_cache
+**/__pycache__
+*.pyc
+.env
+.env.*
+CampusPass-IQ-Bot-*.zip
+
+CampusPass_Full_Code.txt
+*_Full_Code.txt

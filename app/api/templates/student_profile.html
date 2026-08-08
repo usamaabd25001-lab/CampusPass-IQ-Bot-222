@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>معلوماتي — __BOT_NAME__</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root{--primary:__PRIMARY__;--secondary:__SECONDARY__;--dark:__DARK__;--danger:#b42318;--ok:#067647;--border:rgba(127,127,127,.28)}
+    *{box-sizing:border-box}body{margin:0;padding:16px 14px 110px;font-family:Tahoma,Arial,sans-serif;background:var(--tg-theme-bg-color,#f5f7fb);color:var(--tg-theme-text-color,#111827)}
+    .wrap{max-width:680px;margin:auto}.head{margin-bottom:16px}.head h1{font-size:22px;margin:0 0 7px}.head p{margin:0;color:var(--tg-theme-hint-color,#667085);line-height:1.7;font-size:14px}
+    .progress{display:flex;gap:6px;margin:16px 0}.progress span{height:5px;flex:1;border-radius:9px;background:var(--border)}.progress span.on{background:var(--primary)}
+    .card{background:var(--tg-theme-secondary-bg-color,#fff);border:1px solid var(--border);border-radius:16px;padding:17px;box-shadow:0 6px 24px rgba(15,23,42,.05)}
+    .step{display:none}.step.active{display:block}.step h2{font-size:18px;margin:0 0 5px}.step>.hint{font-size:13px;color:var(--tg-theme-hint-color,#667085);margin:0 0 16px;line-height:1.6}
+    .field{margin:0 0 15px}.field label{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:700;margin-bottom:7px}.required{color:var(--danger);font-size:12px}.field input,.field select{width:100%;padding:13px 12px;border-radius:11px;border:1.5px solid var(--border);background:var(--tg-theme-bg-color,#fff);color:var(--tg-theme-text-color,#111);font-size:16px;outline:none;transition:.15s}
+    .field input:focus,.field select:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 15%,transparent)}.field.invalid input,.field.invalid select{border-color:var(--danger);box-shadow:0 0 0 3px rgba(180,35,24,.08)}.field.valid input,.field.valid select{border-color:var(--ok)}
+    .error{min-height:18px;margin-top:5px;color:var(--danger);font-size:12px;line-height:1.4}.notice{display:none;margin:0 0 14px;padding:11px 12px;border-radius:10px;font-size:13px;line-height:1.6}.notice.show{display:block}.notice.bad{background:#fff1f0;color:#912018}.notice.good{background:#ecfdf3;color:#05603a}
+    .actions{position:fixed;right:0;left:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:var(--tg-theme-bg-color,#fff);border-top:1px solid var(--border);display:flex;gap:10px;z-index:5}.actions button{border:0;border-radius:11px;padding:13px 16px;font-size:16px;font-weight:800;min-height:48px}.next{background:var(--primary);color:#fff;flex:1}.next:disabled{opacity:.38;cursor:not-allowed}.back{background:var(--tg-theme-secondary-bg-color,#e8edf4);color:var(--tg-theme-text-color,#111);min-width:98px}.back[hidden]{display:none}
+    .privacy{margin-top:13px;font-size:12px;color:var(--tg-theme-hint-color,#667085);line-height:1.6}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head"><h1>🪪 معلوماتي</h1><p>يتم فحص البيانات أثناء الكتابة، ثم يعيد السيرفر فحصها قبل الحفظ. لن تنتقل للخطوة التالية إذا كان حقل إلزامي غير صحيح.</p></div>
+  <div class="progress" id="progress"><span></span><span></span><span></span></div>
+  <div id="notice" class="notice"></div>
+  <form id="form" novalidate>
+    <section class="card step" data-step="0">
+      <h2>الهوية ورقم الهاتف</h2><p class="hint">الاسم يجب أن يكون ثلاثيًا بالعربية، ورقم الهاتف عراقيًا صحيحًا.</p>
+      <div class="field" data-name="full_name"><label for="full_name">الاسم الكامل <b class="required">مطلوب</b></label><input id="full_name" lang="ar" autocomplete="name" maxlength="180" spellcheck="true" inputmode="text" placeholder="مثال: محمد علي حسن"><div class="error"></div></div>
+      <div class="field" data-name="phone"><label for="phone">رقم الهاتف <b class="required">مطلوب</b></label><input id="phone" autocomplete="tel" maxlength="20" inputmode="tel" placeholder="07XXXXXXXXX"><div class="error"></div></div>
+    </section>
+    <section class="card step" data-step="1">
+      <h2>المحافظة والجهة الدراسية</h2><p class="hint">اختر المحافظة، واكتب اسم الجامعة أو المعهد والكلية بصورة واضحة.</p>
+      <div class="field" data-name="governorate"><label for="governorate">المحافظة <b class="required">مطلوب</b></label><select id="governorate"><option value="">اختر المحافظة</option><option>بغداد</option><option>البصرة</option><option>نينوى</option><option>أربيل</option><option>الأنبار</option><option>كركوك</option><option>السليمانية</option><option>دهوك</option><option>ديالى</option><option>بابل</option><option>كربلاء</option><option>النجف</option><option>واسط</option><option>صلاح الدين</option><option>القادسية</option><option>الديوانية</option><option>ذي قار</option><option>ميسان</option><option>المثنى</option><option>حلبجة</option></select><div class="error"></div></div>
+      <div class="field" data-name="university"><label for="university">الجامعة أو المعهد <b class="required">مطلوب</b></label><input id="university" lang="ar" maxlength="180" spellcheck="true" placeholder="اكتب الاسم الكامل"><div class="error"></div></div>
+      <div class="field" data-name="college"><label for="college">الكلية <b class="required">مطلوب</b></label><input id="college" lang="ar" maxlength="180" spellcheck="true" placeholder="اكتب اسم الكلية"><div class="error"></div></div>
+    </section>
+    <section class="card step" data-step="2">
+      <h2>القسم والمرحلة</h2><p class="hint">اكتب معلوماتك الدراسية الحالية كما هي.</p>
+      <div class="field" data-name="department"><label for="department">القسم أو الاختصاص <b class="required">مطلوب</b></label><input id="department" lang="ar" maxlength="180" spellcheck="true" placeholder="مثال: طب عام"><div class="error"></div></div>
+      <div class="field" data-name="stage"><label for="stage">المرحلة <b class="required">مطلوب</b></label><input id="stage" lang="ar" maxlength="80" spellcheck="true" placeholder="مثال: الثالثة"><div class="error"></div></div>
+      <div class="privacy">🔒 لا يتم الاعتماد على فحص المتصفح وحده. كل البيانات تمر أيضًا بتدقيق Pydantic وقواعد السيرفر وتوقيع Telegram قبل الحفظ.</div>
+    </section>
+  </form>
+</div>
+<div class="actions"><button id="back" class="back" type="button">رجوع</button><button id="next" class="next" type="button" disabled>التالي</button></div>
+<script>
+(() => {
+  const tg=window.Telegram?.WebApp;if(!tg){document.body.innerHTML='<p>افتح هذه الصفحة من داخل Telegram.</p>';return}tg.ready();tg.expand();
+  const initData=tg.initData||'',form=document.getElementById('form'),next=document.getElementById('next'),back=document.getElementById('back'),notice=document.getElementById('notice');
+  const steps=[...document.querySelectorAll('.step')],bars=[...document.querySelectorAll('#progress span')];let step=0,saving=false;
+  const fields=['full_name','phone','governorate','university','college','department','stage'];
+  const normalize=v=>(v||'').normalize('NFKC').replace(/\s+/g,' ').trim();
+  const arabicName=/^[\u0621-\u063A\u0641-\u064A\u066E\u066F\u0671-\u06D3]+(?:[ -][\u0621-\u063A\u0641-\u064A\u066E\u066F\u0671-\u06D3]+){2,5}$/;
+  const badNameWords=new Set(['ماء','بقرة','حلويات','مطعم','شركة','منصة','متجر','اختبار','تجربة','مجهول','نيويوذ']);
+  const normalizeDigits=v=>(v||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+  const cleanPhone=v=>{let x=normalizeDigits(v).replace(/[\s()\-]/g,'');if(x.startsWith('+964'))x='0'+x.slice(4);else if(x.startsWith('964'))x='0'+x.slice(3);return x};
+  const human=(v,min=2)=>{v=normalize(v);if(v.length<min)return 'الحقل قصير جدًا';if(/<\s*\/?\s*[a-z]/i.test(v)||/(https?:\/\/|www\.)/i.test(v))return 'الروابط أو الأكواد غير مسموحة';if(/(.)\1{4,}/u.test(v))return 'يوجد تكرار غير طبيعي للحروف';if((v.match(/[\p{L}]/gu)||[]).length<Math.min(2,min))return 'اكتب قيمة واضحة بالحروف';return ''};
+  const validate=(id)=>{const el=document.getElementById(id),v=normalize(el.value);let err='';if(id==='full_name'){if(!arabicName.test(v))err='اكتب اسمًا عربيًا ثلاثيًا، مثال: محمد علي حسن';else if(v.split(/[ -]+/).some(w=>w.length<2)||v.split(/[ -]+/).some(w=>badNameWords.has(w)))err='القيمة لا تبدو اسم شخص صحيحًا';else if(/(.)\1{4,}/u.test(v))err='يوجد تكرار غير طبيعي للحروف'}else if(id==='phone'){const p=cleanPhone(v);if(!/^07[3-9]\d{8}$/.test(p))err='اكتب رقم موبايل عراقي من 11 رقمًا يبدأ بـ 07';else if(new Set(p.slice(-8)).size<=2)err='رقم الهاتف يبدو غير صحيح'}else if(id==='governorate'){if(!v)err='اختر المحافظة'}else err=human(v,id==='stage'?1:2);const box=el.closest('.field'),msg=box.querySelector('.error');msg.textContent=err;box.classList.toggle('invalid',!!err);box.classList.toggle('valid',!err&&!!v);return !err};
+  const stepFields=[['full_name','phone'],['governorate','university','college'],['department','stage']];
+  const validStep=()=>stepFields[step].every(validate);
+  function render(){steps.forEach((x,i)=>x.classList.toggle('active',i===step));bars.forEach((x,i)=>x.classList.toggle('on',i<=step));back.hidden=step===0;next.textContent=step===steps.length-1?'حفظ المعلومات':'التالي';next.disabled=saving||!validStep();tg.BackButton[step>0?'show':'hide']();window.scrollTo({top:0,behavior:'smooth'})}
+  function show(text,bad=true){notice.textContent=text;notice.className='notice show '+(bad?'bad':'good')}
+  fields.forEach(id=>{const el=document.getElementById(id);el.addEventListener(id==='governorate'?'change':'input',()=>{validate(id);next.disabled=saving||!validStep()});el.addEventListener('blur',()=>validate(id))});
+  back.onclick=()=>{if(step>0){step--;render()}};tg.BackButton.onClick(()=>{if(step>0){step--;render()}});
+  next.onclick=async()=>{if(!validStep())return;if(step<steps.length-1){step++;render();return}saving=true;next.disabled=true;next.textContent='جاري الحفظ...';notice.className='notice';const payload=Object.fromEntries(fields.map(k=>[k,normalize(document.getElementById(k).value)]));payload.phone=cleanPhone(payload.phone);try{const r=await fetch('/api/webapp/student/profile',{method:'PUT',headers:{'Content-Type':'application/json','X-Telegram-Init-Data':initData},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok){const detail=Array.isArray(data.detail)?data.detail.map(x=>x.msg).join('، '):(data.detail||'تعذر حفظ المعلومات');throw new Error(detail)}show('تم حفظ المعلومات بنجاح.',false);setTimeout(()=>tg.close(),500)}catch(e){show(e.message||'تعذر الحفظ');saving=false;render()}};
+  fetch('/api/webapp/student/profile',{headers:{'X-Telegram-Init-Data':initData},cache:'no-store'}).then(async r=>{if(!r.ok)throw new Error('تعذر التحقق من جلسة Telegram');return r.json()}).then(data=>{fields.forEach(k=>{const e=document.getElementById(k);e.value=data.profile?.[k]||''});render()}).catch(e=>{show(e.message);next.disabled=true});
+  render();
+})();
+</script>
+</body>
+</html>
